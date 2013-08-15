@@ -1,0 +1,9 @@
+﻿<section>
+    <h2 class="page-title" data-bind="text: title"></h2>
+    <div data-bind="foreach: items">
+        <div class="folder-list-item">
+            <strong><a data-bind="attr: { href: Url }, text: Name"></a></strong><br />
+            <em data-bind="text: Description"></em>
+        </div>
+    </div>
+</section>
