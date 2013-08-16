@@ -1,8 +1,15 @@
-﻿<nav class="navbar navbar-fixed-top">
+﻿<nav class="navbar">
     <div class="navbar-inner">
         <a class="brand" href="/">
             <span class="title">FSIX - Frictionless Secure Information eXchange</span> 
         </a>
+
+        <div class="btn-group">
+            <a class="btn btn-info" ng-href="#/folders/"><i class="icon-folder-open"></i></a>
+            <a class="btn btn-info" ng-href="#/new/"><i class="icon-plus"></i></a>
+        </div>
+
+        <!--
         <div class="btn-group" data-bind="foreach: router.visibleRoutes">
             <a data-bind="css: { active: isActive }, attr: { href: hash }, text: name" 
                 class="btn btn-info" href="#"></a>
@@ -12,5 +19,7 @@
                 <div class="bar" style="width: 100px;"></div>
             </div>
         </div>
+        -->
+
     </div>
 </nav>

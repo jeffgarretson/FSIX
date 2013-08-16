@@ -13,7 +13,7 @@ namespace FSIX.Models
 
         // Properties
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Note { get; set; }
         public string MIMEType { get; set; }
         public byte[] Content { get; set; }
 
@@ -23,13 +23,7 @@ namespace FSIX.Models
     }
 
     #region Configuration
-    public class ItemConfiguration : EntityTypeConfiguration<Item>
-    {
-        public ItemConfiguration()
-        {
-            Property(i => i.Name).IsRequired();
-        }
-    }
+    public class ItemConfiguration : EntityTypeConfiguration<Item> { }
     #endregion
 
 }

@@ -1,10 +1,7 @@
 ﻿<section>
     <h2 class="page-title">{{title}}</h2>
     <article class="folder-list-item" data-ng-repeat="folder in folders">
-        <strong>{{folder.name}}</strong><br />
+        <strong><a href="#{{folder.url}}">{{folder.name}}</a></strong><br />
         <em>{{folder.description}}</em>
-        <div class="folder-list-item" data-ng-repeat="item in folder.items">
-            {{item.note}}
-        </div>
     </article>
 </section>

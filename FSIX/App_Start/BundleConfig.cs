@@ -17,6 +17,8 @@ namespace FSIX
                 .Include("~/scripts/knockout-{version}.debug.js")
                 .Include("~/scripts/sammy-{version}.js")
                 .Include("~/scripts/toastr.js")
+                .Include("~/scripts/es5-shim.js")
+                .Include("~/scripts/es5-sham.js")
                 .Include("~/scripts/Q.js")
                 .Include("~/scripts/breeze.debug.js")
                 .Include("~/scripts/bootstrap.js")
@@ -26,6 +28,7 @@ namespace FSIX
             bundles.Add(
               new ScriptBundle("~/scripts/app")
                 .Include("~/App/main.js")
+                .Include("~/App/models/*.js")
                 .Include("~/App/controllers/*.js")
                 .Include("~/App/services/*.js")
               );

@@ -1,36 +1,38 @@
-﻿define(['services/dataservice', 'services/logger'], function (dataservice, logger) {
-    var vm = {
-        activate: activate,
-        title: 'Folder',
-        items: ko.observableArray()
-    };
-    return vm;
+﻿fsix.controller('FolderCtrl',
+    ['$scope', '$routeParams', 'dataservice', 'logger',
+    function ($scope, $routeParams, dataservice, logger) {
 
-    //#region Internal Methods
-    function activate(routeData) {
-        logger.log('Folder View Activated', null, 'folder', false);
-        getFolderDetails(routeData.id);
-        return true;
-    }
+        logger.log("Creating Folder Details Controller", null, "folder.js", false);
 
-    function getFolderDetails(id) {
-        dataservice.getFolderDetails(id)
-            .then(querySucceeded)
-            .fail(queryFailed);
-    }
+        $scope.title = "Folder Details";
+        $scope.folders = [];
+        $scope.error = "";
+        $scope.getFolderDetails = getFolderDetails;
 
-    function querySucceeded(data) {
-        vm.items([]);
-        data.results.forEach(function (item) {
-            //extendItem(item);
-            vm.items.push(item);
-        });
-        logger.info("Fetched Items");
-    }
+        // Load folder details immediately
+        $scope.getFolderDetails(parseInt($routeParams.id));
 
-    function queryFailed(error) {
-        logger.error(error.message, "Query failed");
-    }
+        //#region Private functions
+        function getFolderDetails(id) {
+            dataservice.getFolderDetails(id)
+                .then(querySucceeded)
+                .fail(queryFailed)
+                .fin(refreshView);
+        }
 
-    //#endregion
-});
+        function querySucceeded(data) {
+            $scope.folders = data;
+            logger.info("Fetched Items");
+            console.log("XHR success");
+        }
+
+        function queryFailed(error) {
+            $scope.error = error.message;
+            console.log("XHR failure");
+        }
+
+        function refreshView() { $scope.$apply(); }
+
+        //#endregion
+
+    }]);

@@ -1,35 +1,36 @@
-define(['durandal/system'],
-    function (system) {
-        var logger = {
-            log: log,
-            logError: logError
-        };
+fsix.factory('logger', function () {
+    var logger = {
+        log: log,
+        logError: logError
+    };
 
-        return logger;
+    return logger;
 
-        function log(message, data, source, showToast) {
-            logIt(message, data, source, showToast, 'info');
-        }
+    function log(message, data, source, showToast) {
+        logIt(message, data, source, showToast, 'info');
+    }
 
-        function logError(message, data, source, showToast) {
-            logIt(message, data, source, showToast, 'error');
-        }
+    function logError(message, data, source, showToast) {
+        logIt(message, data, source, showToast, 'error');
+    }
 
-        function logIt(message, data, source, showToast, toastType) {
-            source = source ? '[' + source + '] ' : '';
-            if (data) {
-                system.log(source, message, data);
+    function logIt(message, data, source, showToast, toastType) {
+        //source = source ? '[' + source + '] ' : '';
+        //if (data) {
+        //    system.log(source, message, data);
+        //} else {
+        //    system.log(source, message);
+        //}
+        var console = window.console;
+        !!console && console.log && console.log.apply && console.log.apply(console, arguments);
+        if (showToast) {
+            if (toastType === 'error') {
+                toastr.error(message);
             } else {
-                system.log(source, message);
-            }
-            if (showToast) {
-                if (toastType === 'error') {
-                    toastr.error(message);
-                } else {
-                    toastr.info(message);
-                }
-
+                toastr.info(message);
             }
 
         }
-    });
+
+    }
+});

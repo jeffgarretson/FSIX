@@ -1,7 +1,7 @@
 ﻿@using System.Web
 @using System.Web.Optimization
 <!DOCTYPE html>
-<html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="fsix">
 <head>
     <title>FSIX - Frictionless Secure Information eXchange</title>
     <meta charset="utf-8" />
@@ -12,6 +12,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     @Styles.Render("~/Content/css")
+    <!--[if lte IE 8]>
+        <script src="~/Scripts/html5shiv.js"></script>
+    <![endif]-->
     <script type="text/javascript">
         if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
             var msViewportStyle = document.createElement("style");
@@ -22,16 +25,17 @@
     </script>
 </head>
 <body>
-    <div id="applicationHost">
-        @Html.Partial("_splash")
-    </div>
+    <header ng-include="'App/views/nav.html'"></header>
+
+    <section id="content" class="main container-fluid">
+        <div id="applicationHost" ng-view>
+            @Html.Partial("_splash")
+        </div>
+    </section>
+
+    <footer ng-include="'App/views/footer.html'"></footer>
 
     @Scripts.Render("~/scripts/vendor")
-        @if(HttpContext.Current.IsDebuggingEnabled) {
-            <script type="text/javascript" src="~/App/durandal/amd/require.js" data-main="@Url.Content("~/App/main")"></script>
-        } else {
-			<!-- Remember to run the Durandal optimizer.exe to create the main-built.js  -->
-            <script type="text/javascript" src="~/App/main-built.js"></script>
-        }
+    @Scripts.Render("~/scripts/app")
 </body>
 </html>

@@ -1,10 +1,10 @@
-﻿fsix.controller('ExpiredCtrl',
+﻿fsix.controller('FoldersCtrl',
     ['$scope', 'dataservice', 'logger',
     function ($scope, dataservice, logger) {
 
-        logger.log("Creating Expired Folders Controller", null, "expired.js", false);
+        logger.log("Creating Folders Controller", null, "folders.js", false);
 
-        $scope.title = "Expired Folders";
+        $scope.title = "Folders";
         $scope.folders = [];
         $scope.error = "";
         $scope.getFolders = getFolders;

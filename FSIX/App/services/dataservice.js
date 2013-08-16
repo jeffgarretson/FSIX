@@ -1,109 +1,144 @@
-﻿define(['services/logger'], function (logger) {
+﻿fsix.factory('dataservice',
+    ['breeze', 'Q', 'model', 'logger', '$timeout',
+    function (breeze, Q, model, logger, $timeout) {
 
-    var serviceName = 'api/fsix';
-    var manager = new breeze.EntityManager(serviceName);
-    //manager.enableSaveQueuing(true);
+        logger.log("Creating dataservice", null, "dataservice", false);
 
-    return {
-        getFolders: getFolders,
-        getFolderDetails: getFolderDetails
-    };
+        configureBreeze();
+        var manager = new breeze.EntityManager("breeze/fsix");
+        //manager.enableSaveQueuing(true);
 
-    /*** implementation details ***/
+        var dataservice = {
+            metadataStore: manager.metadataStore,
+            getFolders: getFolders,
+            getFolderDetails: getFolderDetails
+        };
+        model.initialize(dataservice);
+        return dataservice;
 
-    //#region main application operations
-    function getFolders() {
-        var query = breeze.EntityQuery
-                .from("Folders")
-                .orderBy("ExpirationDate DESC, Name");
-        return manager.executeQuery(query);
-    }
+        /*** implementation details ***/
 
-    function getFolderDetails(id) {
-        var query = breeze.EntityQuery
-                .from("Folders")
-                .where("Id", "==", id)
-                .orderBy("ExpirationDate DESC, Name")
-                .expand("Items");
-        return manager.executeQuery(query);
-    }
-
-    /*
-        
-    function getDatabases(App_ID) {
-        var query = breeze.EntityQuery
-            .from("Databases")
-            .orderBy("Database_Name")
-            .where("App_ID", "==", App_ID);
-        return manager.executeQuery(query);
-    }
-
-    function getTables(Database_ID) {
-        var query = breeze.EntityQuery
-            .from("Tables")
-            .orderBy("Table_Name")
-            .where("Database_ID", "==", Database_ID);
-        return manager.executeQuery(query);
-    }
-
-    function getTablesWithColumns(Database_ID) {
-        var query = breeze.EntityQuery
-            .from("Tables")
-            .orderBy("Table_Name")
-            .where("Database_ID", "==", Database_ID)
-            .expand("Columns");
-        return manager.executeQuery(query);
-    }
-
-    */
-
-    function saveChanges() {
-        return manager.saveChanges()
-            .then(saveSucceeded)
-            .fail(saveFailed);
-
-        function saveSucceeded(saveResult) {
-            logger.success("# of items saved = " + saveResult.entities.length);
-            logger.log(saveResult);
+        //#region main application operations
+        function getFolders(forceRefresh) {
+            var query = breeze.EntityQuery
+                    .from("folders")
+                    .orderBy("expirationDate DESC, name");
+            return manager.executeQuery(query)
+                .then(getSucceeded);
         }
 
-        function saveFailed(error) {
-            var reason = error.message;
-            var detail = error.detail;
+        function getFolderDetails(id) {
+            var query = breeze.EntityQuery
+                    .from("folders")
+                    .where("id", "==", id)
+                    .orderBy("expirationDate DESC, name")
+                    .expand("permissions, items, logs");
+            return manager.executeQuery(query)
+                .then(getSucceeded);
+        }
 
-            if (error.entityErrors) {
-                reason = handleSaveValidationError(error);
-            } else if (detail && detail.ExceptionType &&
-                detail.ExceptionType.indexOf('OptimisticConcurrencyException') !== -1) {
-                // Concurrency error 
-                reason =
-                    "Another user, perhaps the server, " +
-                    "may have deleted one or all of the items." +
-                    " You may have to restart the app.";
-            } else {
-                reason = "Failed to save changes: " + reason +
-                         " You may have to restart the app.";
+        function getSucceeded(data) {
+            var qType = data.XHR ? "remote" : "local";
+            logger.log(qType + " query succeeded");
+            return data.results;
+        }
+
+        /*
+        
+        function getDatabases(App_ID) {
+            var query = breeze.EntityQuery
+                .from("Databases")
+                .orderBy("Database_Name")
+                .where("App_ID", "==", App_ID);
+            return manager.executeQuery(query);
+        }
+
+        function getTables(Database_ID) {
+            var query = breeze.EntityQuery
+                .from("Tables")
+                .orderBy("Table_Name")
+                .where("Database_ID", "==", Database_ID);
+            return manager.executeQuery(query);
+        }
+
+        function getTablesWithColumns(Database_ID) {
+            var query = breeze.EntityQuery
+                .from("Tables")
+                .orderBy("Table_Name")
+                .where("Database_ID", "==", Database_ID)
+                .expand("Columns");
+            return manager.executeQuery(query);
+        }
+
+        */
+
+        function saveChanges() {
+            return manager.saveChanges()
+                .then(saveSucceeded)
+                .fail(saveFailed);
+
+            function saveSucceeded(saveResult) {
+                logger.success("# of items saved = " + saveResult.entities.length);
+                logger.log(saveResult);
             }
 
-            logger.error(error, reason);
-            // DEMO ONLY: discard all pending changes
-            // Let them see the error for a second before rejecting changes
-            setTimeout(function () {
-                manager.rejectChanges();
-            }, 1000);
-            throw error; // so caller can see it
+            function saveFailed(error) {
+                var reason = error.message;
+                var detail = error.detail;
+
+                if (error.entityErrors) {
+                    reason = handleSaveValidationError(error);
+                } else if (detail && detail.ExceptionType &&
+                    detail.ExceptionType.indexOf('OptimisticConcurrencyException') !== -1) {
+                    // Concurrency error 
+                    reason =
+                        "Another user, perhaps the server, " +
+                        "may have deleted one or all of the items." +
+                        " You may have to restart the app.";
+                } else {
+                    reason = "Failed to save changes: " + reason +
+                             " You may have to restart the app.";
+                }
+
+                logger.error(error, reason);
+                // DEMO ONLY: discard all pending changes
+                // Let them see the error for a second before rejecting changes
+                setTimeout(function () {
+                    manager.rejectChanges();
+                }, 1000);
+                throw error; // so caller can see it
+            }
         }
-    }
 
-    function handleSaveValidationError(error) {
-        var message = "Not saved due to validation error";
-        try { // fish out the first error
-            var firstErr = error.entityErrors[0];
-            message += ": " + firstErr.errorMessage;
-        } catch (e) { /* eat it for now */ }
-        return message;
-    }
+        function handleSaveValidationError(error) {
+            var message = "Not saved due to validation error";
+            try { // fish out the first error
+                var firstErr = error.entityErrors[0];
+                message += ": " + firstErr.errorMessage;
+            } catch (e) { /* eat it for now */ }
+            return message;
+        }
 
-    //#endregion
+        function configureBreeze() {
+            // configure to use the model library for Angular
+            breeze.config.initializeAdapterInstance("modelLibrary", "backingStore", true);
 
-});
+            // configure to use camelCase
+            breeze.NamingConvention.camelCase.setAsDefault();
+
+            // configure to resist CSRF attack
+            //var antiForgeryToken = $("#antiForgeryToken").val();
+            //if (antiForgeryToken) {
+            //    // get the current default Breeze AJAX adapter & add header
+            //    var ajaxAdapter = breeze.config.getAdapterInstance("ajax");
+            //    ajaxAdapter.defaultSettings = {
+            //        headers: {
+            //            'RequestVerificationToken': antiForgeryToken
+            //        },
+            //    };
+            //}
+        }
+
+        //#endregion
+
+    }]);
