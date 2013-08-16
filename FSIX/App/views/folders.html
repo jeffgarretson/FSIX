@@ -1,7 +1,8 @@
 ﻿<section>
     <h2 class="page-title">{{title}}</h2>
     <article class="folder-list-item" data-ng-repeat="folder in folders">
-        <strong><a href="#{{folder.url}}">{{folder.name}}</a></strong><br />
-        <em>{{folder.description}}</em>
+        <h3><i class="icon-folder-open-alt"></i> <a href="#{{folder.url}}" title="Open folder">{{folder.name}}</a></h3>
+        <p>{{folder.description}}</p>
+        <p><em>Expires {{folder.relativeExpirationDate}}</em></p>
     </article>
 </section>

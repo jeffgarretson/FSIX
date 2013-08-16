@@ -1,4 +1,4 @@
-﻿fsix.factory('model', function () {
+﻿fsix.factory('model', ['moment', function (moment) {
 
     var dataservice;
 
@@ -14,16 +14,30 @@
         var store = dataservice.metadataStore;
         store.registerEntityTypeCtor("Folder", null, folderInitializer);
         store.registerEntityTypeCtor("Item", null, itemInitializer);
+        store.registerEntityTypeCtor("Permission", null, permissionInitializer);
     }
 
     function folderInitializer(folder) {
         folder.errorMessage = "";
-        // Is this where I should set the URL property?
         folder.url = "/folder/" + folder.id;
+        var expirationMoment = new moment(folder.expirationDate);
+        folder.relativeExpirationDate = expirationMoment.fromNow();
     }
 
     function itemInitializer(item) {
         item.errorMessage = "";
     }
 
-});
+    function permissionInitializer(permission) {
+        permission.errorMessage = "";
+        if (permission.isOwner) {
+            permission.accessDescription = "Owner";
+        } else {
+            var perms = [];
+            if (permission.permRead) { perms.push("Read"); }
+            if (permission.permWrite) { perms.push("Write"); }
+            if (permission.permShare) { perms.push("Share"); }
+            permission.accessDescription = perms.join(", ");
+        }
+    }
+}]);

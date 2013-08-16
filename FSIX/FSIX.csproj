@@ -223,6 +223,8 @@
     <Compile Include="Util\AuthRedirectHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App\controllers\admin.js" />
+    <Content Include="App\controllers\help.js" />
     <Content Include="App\controllers\folders.js" />
     <Content Include="App\controllers\expired.js" />
     <Content Include="App\controllers\folder.js" />
@@ -232,6 +234,8 @@
     <Content Include="App\models\model.js" />
     <Content Include="App\services\dataservice.js" />
     <Content Include="App\services\logger.js" />
+    <Content Include="App\views\admin.html" />
+    <Content Include="App\views\help.html" />
     <Content Include="App\views\folder.html" />
     <Content Include="App\views\expired.html" />
     <Content Include="App\views\new.html" />
@@ -282,6 +286,8 @@
     <Content Include="Scripts\durandal\transitions\entrance.js" />
     <Content Include="Scripts\durandal\viewEngine.js" />
     <Content Include="Scripts\durandal\viewLocator.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
     <Content Include="weyland-config.js" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\angular-bootstrap-prettify.js" />

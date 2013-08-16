@@ -7,17 +7,20 @@ window.fsix = angular.module('fsix', []);
 // Learn about Angular dependency injection in this video
 // http://www.youtube.com/watch?feature=player_embedded&v=1CpiB3Wk25U#t=2253s
 fsix.value('breeze', window.breeze)
-    .value('Q', window.Q);
+    .value('Q', window.Q)
+    .value('moment', window.moment);
 
 
 // Configure routes
 fsix.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
-        //.when('/', { templateUrl: 'app/views/folders.html', controller: 'FoldersCtrl' })
-        .when('/folders/', { templateUrl: 'app/views/folders.html', controller: 'FoldersCtrl' })
-        .when('/folders/expired/', { templateUrl: 'app/views/folders.html', controller: 'FoldersCtrl' })
+        .when('/', { templateUrl: 'app/views/folders.html', controller: 'FoldersCtrl' })
+        .when('/expired/', { templateUrl: 'app/views/folders.html', controller: 'FoldersCtrl' })
         .when('/folder/:id/', { templateUrl: 'app/views/folder.html', controller: 'FolderCtrl' })
-        .otherwise({ redirectTo: '/folders/' });
+        .when('/new/', { templateUrl: 'app/views/new.html', controller: 'NewCtrl' })
+        .when('/help/', { templateUrl: 'app/views/help.html', controller: 'HelpCtrl' })
+        .when('/admin/', { templateUrl: 'app/views/admin.html', controller: 'AdminCtrl' })
+        .otherwise({ redirectTo: '/' });
 }]);
 
 

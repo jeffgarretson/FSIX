@@ -8,6 +8,7 @@
         $scope.folders = [];
         $scope.error = "";
         $scope.getFolderDetails = getFolderDetails;
+        $scope.newItem = newItem;
 
         // Load folder details immediately
         $scope.getFolderDetails(parseInt($routeParams.id));
@@ -23,12 +24,14 @@
         function querySucceeded(data) {
             $scope.folders = data;
             logger.info("Fetched Items");
-            console.log("XHR success");
         }
 
         function queryFailed(error) {
             $scope.error = error.message;
-            console.log("XHR failure");
+        }
+
+        function newItem() {
+            alert("User wants to add a new item. Ha!!!");
         }
 
         function refreshView() { $scope.$apply(); }

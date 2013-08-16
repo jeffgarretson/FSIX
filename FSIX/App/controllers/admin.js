@@ -1,22 +1,14 @@
-﻿fsix.controller('NewCtrl',
+﻿fsix.controller('AdminCtrl',
     ['$scope', 'dataservice', 'logger',
     function ($scope, dataservice, logger) {
 
-        logger.log("Creating New Folder Controller", null, "new.js", false);
+        logger.log("Creating Admin Controller", null, "admin.js", false);
 
-        $scope.title = "Create New Folder";
+        $scope.title = "Admin";
         $scope.folders = [];
         $scope.error = "";
 
         //#region Private functions
-        function getFolders(forceRefresh) {
-            dataservice.getFolders(forceRefresh)
-                .then(querySucceeded)
-                .fail(queryFailed)
-                .fin(refreshView);
-        }
-
-        function refresh() { getFolders(true); }
 
         function querySucceeded(data) {
             $scope.folders = data;

@@ -1,10 +1,31 @@
 ﻿<section>
-    <h2 class="page-title">{{title}}</h2>
+    <!--<h2 class="page-title">{{title}}</h2>-->
     <article class="folder-list-item" data-ng-repeat="folder in folders">
-        <strong>{{folder.name}}</strong><br />
-        <em>{{folder.description}}</em>
+
+        
+        <h2 class="page-title"><i class="icon-folder-open-alt"></i> {{folder.name}}</h2>
+        <p>{{folder.description}}</p>
+        <p><em>Expires {{folder.relativeExpirationDate}}</em></p>
+
+        <h3>
+            Items
+            <a class="btn btn-info pull-right" data-ng-click="newItem()" title="New item"><i class="icon-plus"></i></a>
+        </h3>
         <div class="folder-list-item" data-ng-repeat="item in folder.items">
             {{item.note}}
         </div>
+
+        <h3>Permissions</h3>
+        <ul>
+            <li data-ng-repeat="permission in folder.permissions">
+                {{permission.username}} ({{permission.accessDescription}})
+            </li>
+        </ul>
+
+        <h3>Logs</h3>
+        <div class="folder-list-item" data-ng-repeat="log in folder.logs">
+            {{message}}
+        </div>
+
     </article>
 </section>
