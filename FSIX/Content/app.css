@@ -17,13 +17,13 @@ nav, section, summary, time, mark, audio, video
 html {
     padding: 0;
     color: #444;
-    /*background: #EFEFEF;*/
+    background: #f8f8f8;
 }
 
 body {
     font-size: 18px;
     margin: 0 auto;
-    max-width: 1100px;
+    max-width: 992px;
     background-color: transparent;
     font-family: "Segoe UI", Arial, Helvetica, sans-serif;
 }
@@ -41,11 +41,22 @@ h1, h2, h3 {
     text-transform: uppercase;
     letter-spacing: -1px !important;
     */
-    color: #777;
+    color: #D44;
 }
 
 h3 {
     margin-top: 1em;
+}
+
+a {
+  color: #D44;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: #a11;
+  text-decoration: underline;
 }
 
 /*
@@ -55,9 +66,10 @@ section.main {
 */
 
 .navbar .brand {
+    color: #f8f8f8;
     /*padding: 6px 30px 12px 30px;
     margin-bottom: -8px;*/
-    height: 48px;
+    /*height: 48px;*/
 }
 
 /*h2.page-title {
@@ -65,20 +77,21 @@ section.main {
 }*/
 
 .brand .title {
-    float: left;
+    /*float: left;*/
     font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     font-size: 145%;
     font-weight: 900;
     letter-spacing: -2px;
-    margin: 2% 0;
-    padding-left: 50px;
+    /*margin: 2% 0;*/
+    /*padding-left: 50px;*/
     -webkit-text-shadow: 2px 2px rgba(0, 0, 0, 0.15);
     text-shadow: 2px 2px rgba(0, 0, 0, 0.15);
     text-transform: uppercase;
     text-transform: initial;
     text-decoration: none;
-    color: #0081C2;
+    /*color: #0081C2;*/
 }
+    /*
     span.title {
         background: url(/content/images/icon.png) no-repeat left center;
         -moz-background-size: 45px;
@@ -86,6 +99,7 @@ section.main {
         -webkit-background-size: 45px;
         background-size: 45px;
     }
+    */
 
 .page-splash
 {
@@ -147,7 +161,12 @@ footer span {
 }
 
 .folder-list-item {
-    margin-top: 1em;
+    margin-top: 1.5em;
+}
+
+.section-control {
+    color: #999;
+    font-size: 0.75em;
 }
 
 /***************************/
@@ -171,6 +190,8 @@ footer span {
 
 .navbar {
     text-transform: uppercase;
+    background-color: #222;
+    color: #f8f8f8;
 }
 
 .loader .page-progress-bar {
@@ -185,7 +206,7 @@ footer span {
 }
 
 .btn {
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     letter-spacing: 1px;
 }
 

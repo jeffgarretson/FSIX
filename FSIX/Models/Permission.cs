@@ -22,7 +22,7 @@ namespace FSIX.Models
         public Boolean PermShare { get; set; }
 
         // Navigation
-        //[ForeignKey("Username")]
+        [ForeignKey("Username")]
         public virtual User User { get; set; }
         public virtual Folder Folder { get; set; }
 

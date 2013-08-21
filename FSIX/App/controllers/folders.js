@@ -4,11 +4,14 @@
 
         logger.log("Creating Folders Controller", null, "folders.js", false);
 
-        $scope.title = "Folders";
-        $scope.folders = [];
-        $scope.error = "";
-        $scope.getFolders = getFolders;
-        $scope.refresh = refresh;
+        angular.extend($scope, {
+            title : "Folders",
+            folders : [],
+            error : "",
+            getFolders : getFolders,
+            refresh : refresh,
+            addFolder : addFolder
+        });
 
         // Load folder list immediately (from cache if possible)
         $scope.getFolders();
@@ -33,6 +36,10 @@
         }
 
         function refreshView() { $scope.$apply(); }
+
+        function addFolder() {
+            alert("User wants to add a folder. Seems like a reasonable request.");
+        }
 
         //#endregion
     }]);

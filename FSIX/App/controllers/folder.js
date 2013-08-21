@@ -4,11 +4,15 @@
 
         logger.log("Creating Folder Details Controller", null, "folder.js", false);
 
-        $scope.title = "Folder Details";
-        $scope.folders = [];
-        $scope.error = "";
-        $scope.getFolderDetails = getFolderDetails;
-        $scope.newItem = newItem;
+        angular.extend($scope, {
+            title: "Folder Details",
+            folders: [],
+            error: "",
+            getFolderDetails: getFolderDetails,
+            addNote: addNote,
+            addFile: addFile,
+            managePermissions: managePermissions
+        });
 
         // Load folder details immediately
         $scope.getFolderDetails(parseInt($routeParams.id));
@@ -30,8 +34,38 @@
             $scope.error = error.message;
         }
 
-        function newItem() {
-            alert("User wants to add a new item. Ha!!!");
+        function endEdit(entity) {
+            dataservice.saveEntity(entity).fin(refreshView);
+        }
+
+        function addNote() {
+            var item = dataservice.createItem();
+            // How do I refer to the current folder? Do I need to pass it in from the ng-click event?
+            // item.name =
+            dataservice.saveEntity(item)
+                .then(addSucceeded)
+                .fail(addFailed)
+                .fin(refreshView);
+
+            function addSucceeded() {
+                showAddedItem(item);
+            }
+
+            function addFailed(error) {
+                failed({ message: "Save of new item failed" });
+            }
+        }
+
+        function addFile() {
+            alert("User wants to add a new FILE. Double-Ha!!!");
+        }
+
+        function managePermissions() {
+            alert("You wanna manage PERMISSIONS? Man, you craaaaazy!");
+        }
+
+        function showAddedItem(item) {
+            $scope.folders.items.unshift(item);
         }
 
         function refreshView() { $scope.$apply(); }

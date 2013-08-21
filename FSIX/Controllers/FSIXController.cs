@@ -67,7 +67,7 @@
 
         // WhoAmI
         [HttpGet]
-        public string WhoAmI()
+        public IQueryable<User> WhoAmI()
         {
             return _repository.WhoAmI;
         }

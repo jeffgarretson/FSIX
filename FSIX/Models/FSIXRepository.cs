@@ -10,11 +10,11 @@ namespace FSIX.Models
 {
     public class FSIXRepository : EFContextProvider<FSIXContext>
     {
+        private readonly string Username;
         public FSIXRepository(IPrincipal user)
         {
             Username = user.Identity.Name.Split('\\')[1];
         }
-        public string Username { get; private set; }
 
         // Users - No filtering (unless we add a password hash column, then that should be excluded)
         public DbQuery<User> Users
@@ -57,12 +57,13 @@ namespace FSIX.Models
 
         // TODO: Logs, Categories, Severities, Configurations
 
-        // WhoAmI - Returns username of logged-in user
-        public string WhoAmI
+        // WhoAmI - Returns information about the logged-in user
+        public DbQuery<User> WhoAmI
         {
             get
             {
-                return Username;
+                return (DbQuery<User>)Context.Users
+                    .Where(u => u.Username == Username);
             }
         }
 
@@ -112,7 +113,21 @@ namespace FSIX.Models
 
         private bool BeforeSaveItem(Item item, EntityInfo info)
         {
-            var folder = ValidationContext.Folders.Find(item.Folder);
+            // Don't trust the client
+            item.ModifiedTime = DateTime.UtcNow;
+            if (info.EntityState == EntityState.Added)
+            {
+                item.CreatedByUsername = Username;
+                item.CreatedTime = item.ModifiedTime;
+            }
+            else if (item.CreatedByUsername != Username)
+            {
+                // Can't mess with somebody else's stuff!
+                throwCannotSaveEntityForThisUser();
+            }
+
+            // Make sure user has write permission on the folder
+            var folder = ValidationContext.Folders.Find(item.FolderId);
             return (null == folder)
                        ? throwCannotFindParentFolder()
                        : folder.Permissions.Any(p => p.PermWrite && p.Username == Username) || throwCannotSaveEntityForThisUser();

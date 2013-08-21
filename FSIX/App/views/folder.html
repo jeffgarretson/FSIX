@@ -4,23 +4,51 @@
 
         
         <h2 class="page-title"><i class="icon-folder-open-alt"></i> {{folder.name}}</h2>
+        <p class="section-control"><i class="icon-time"></i> <em>Expires {{folder.relativeExpirationDate}}</em></p>
         <p>{{folder.description}}</p>
-        <p><em>Expires {{folder.relativeExpirationDate}}</em></p>
 
-        <h3>
-            Items
-            <a class="btn btn-info pull-right" data-ng-click="newItem()" title="New item"><i class="icon-plus"></i></a>
-        </h3>
-        <div class="folder-list-item" data-ng-repeat="item in folder.items">
-            {{item.note}}
+
+        <h3>Items</h3>
+        <p class="section-control">
+            <a class="btn" data-ng-click="addNote()"><i class="icon-plus"></i> Add a note</a>
+            <a class="btn" data-ng-click="addFile()"><i class="icon-plus"></i> Add a file</a>
+        </p>
+
+        <form data-ng-submit="folder.addItem()">
+            <!--<p>Name: <input data-ng-model="folder.newItemName" /></p>-->
+            <p>Note: <input data-ng-model="folder.newItemNote" /></p>
+            <input type="file" name="file" data-ng-model="folder.newItemContent" />
+            <input value="Submit" type="submit" />
+        </form>
+
+        <div data-ng-repeat="item in folder.items">
+            <div class="folder-list-item" data-ng-switch on="item.type">
+                <span data-ng-switch-when="Note">
+                    <i class="icon-comment-alt icon-2x pull-left"></i> {{item.note}}
+                    <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
+                </span>
+                <span data-ng-switch-when="File">
+                    <i class="icon-file-alt icon-2x pull-left"></i> <a data-ng-href="{{item.url}}">{{item.fileName}}</a>
+                    <p>{{item.note}}</p>
+                    <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
+                </span>
+                <span data-ng-switch-when="Image">
+                    <i class="icon-picture icon-2x pull-left"></i> <img class="item-image" data-ng-src="{{item.url}}" />
+                    <p>{{item.note}}</p>
+                    <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
+                </span>
+            </div>
         </div>
 
+
         <h3>Permissions</h3>
-        <ul>
-            <li data-ng-repeat="permission in folder.permissions">
-                {{permission.username}} ({{permission.accessDescription}})
-            </li>
-        </ul>
+        <p class="section-control">
+            <a class="btn" data-ng-click="managePermissions()"><i class="icon-cog"></i> Manage permissions</a>
+        </p>
+        <div class="folder-list-item" data-ng-repeat="permission in folder.permissions">
+            <i class="icon-user"></i> {{permission.user.displayName}} ({{permission.accessDescription}})
+        </div>
+
 
         <h3>Logs</h3>
         <div class="folder-list-item" data-ng-repeat="log in folder.logs">

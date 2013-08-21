@@ -208,6 +208,26 @@
     <Compile Include="Migrations\201308152206541_RenameItemsDescToNote.Designer.cs">
       <DependentUpon>201308152206541_RenameItemsDescToNote.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201308191514118_ItemMetadata.cs" />
+    <Compile Include="Migrations\201308191514118_ItemMetadata.Designer.cs">
+      <DependentUpon>201308191514118_ItemMetadata.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201308191627566_ItemType.cs" />
+    <Compile Include="Migrations\201308191627566_ItemType.Designer.cs">
+      <DependentUpon>201308191627566_ItemType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201308191640586_ItemTypeMaxLength.cs" />
+    <Compile Include="Migrations\201308191640586_ItemTypeMaxLength.Designer.cs">
+      <DependentUpon>201308191640586_ItemTypeMaxLength.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201308201325416_RenameColsInItems.cs" />
+    <Compile Include="Migrations\201308201325416_RenameColsInItems.Designer.cs">
+      <DependentUpon>201308201325416_RenameColsInItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201308201341580_ItemsColumnOrder.cs" />
+    <Compile Include="Migrations\201308201341580_ItemsColumnOrder.Designer.cs">
+      <DependentUpon>201308201341580_ItemsColumnOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Configuration.cs" />
@@ -659,6 +679,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201308152206541_RenameItemsDescToNote.resx">
       <DependentUpon>201308152206541_RenameItemsDescToNote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308191514118_ItemMetadata.resx">
+      <DependentUpon>201308191514118_ItemMetadata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308191627566_ItemType.resx">
+      <DependentUpon>201308191627566_ItemType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308191640586_ItemTypeMaxLength.resx">
+      <DependentUpon>201308191640586_ItemTypeMaxLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308201325416_RenameColsInItems.resx">
+      <DependentUpon>201308201325416_RenameColsInItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201308201341580_ItemsColumnOrder.resx">
+      <DependentUpon>201308201341580_ItemsColumnOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

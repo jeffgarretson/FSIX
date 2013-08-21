@@ -1,6 +1,12 @@
 ﻿<section>
+    <input class="pull-right" type="search" placeholder="Live search..." autofocus data-ng-model="searchText.name" />
     <h2 class="page-title">{{title}}</h2>
-    <article class="folder-list-item" data-ng-repeat="folder in folders">
+
+    <p class="section-control">
+        <a class="btn" data-ng-click="addFolder()"><i class="icon-plus"></i> New folder</a>
+    </p>
+
+    <article class="folder-list-item" data-ng-repeat="folder in folders | filter:searchText">
         <h3><i class="icon-folder-open-alt"></i> <a href="#{{folder.url}}" title="Open folder">{{folder.name}}</a></h3>
         <p>{{folder.description}}</p>
         <p><em>Expires {{folder.relativeExpirationDate}}</em></p>
