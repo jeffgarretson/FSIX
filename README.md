@@ -1,4 +1,4 @@
-# FSIX - Frictionless Secure Information eXchange
+# FSIX
 
 ## Frictionless Secure Information eXchange
 
