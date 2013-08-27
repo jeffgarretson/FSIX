@@ -59,7 +59,7 @@
             expirationDate: new Date("2013/09/11")
         });
         dataservice.saveChanges().fail(addFailed);
-        vm.folders.push(folder);   // .prepend()?
+        vm.folders.push(folder);   // .unshift()?
 
         vm.newFolder.name("");
         vm.newFolder.description("");
