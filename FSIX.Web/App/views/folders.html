@@ -1,0 +1,35 @@
+﻿<section>
+
+    <!--
+    <input class="pull-right" type="search" placeholder="Live search..." autofocus data-ng-model="searchText.name" />
+    -->
+
+    <h2 class="page-title" data-bind="text: displayName"></h2>
+
+    <p class="section-control">
+        <a class="btn" data-bind="click: showNewFolderForm"><i class="icon-plus"></i> New folder</a>
+    </p>
+
+    <div data-bind="if: shouldShowNewFolderForm">
+        <form data-bind="submit: addFolder">
+            <div class="pull-right">
+                <h4>Permissions</h4>
+                <p>To do...</p>
+            </div>
+            <div>
+                <p>Name: <input data-bind="value: newFolder.name" placeholder="Folder name (required)" /></p>
+                <p>Description:<br />
+                    <textarea rows="5" data-bind="value: newFolder.description" placeholder="Folder description (optional)" /></p>
+                <p><input class="btn" value="Submit" type="submit" /></p>
+            </div>
+        </form>
+    </div>
+
+    <div data-bind="foreach:folders">
+        <article class="folder-list-item">
+            <h3><i class="icon-folder-open-alt"></i> <a data-bind="attr: { href: url }, text:name" title="Open folder"></a></h3>
+            <p data-bind="text:description"></p>
+            <p class="section-control"><em>Expires <span data-bind="text:relativeExpirationDate" /></em></p>
+        </article>
+    </div>
+</section>

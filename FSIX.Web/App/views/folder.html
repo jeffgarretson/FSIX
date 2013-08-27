@@ -1,0 +1,90 @@
+﻿<section>
+
+    <article class="folder-list-item" data-bind="ifnot: folders().length">
+        <h2 class="page-title"><i class="icon-exclamation-sign"></i> Oops!</h2>
+        <p>Folder doesn't exist, has expired, or you don't have permission to access it.</p>
+    </article>
+
+    <article class="folder-list-item" data-bind="foreach:folders">
+
+        
+        <h2 class="page-title"><i class="icon-folder-open-alt"></i> <span data-bind="text:name" /></h2>
+        <p class="section-control"><i class="icon-time"></i> <em>Expires <span data-bind="text:relativeExpirationDate" /></em></p>
+        <p data-bind="text:description"></p>
+
+
+        <h3>Items</h3>
+
+
+        <p class="section-control">
+            <a class="btn" data-bind="click:$parent.addNote"><i class="icon-comment"></i> Add a Note</a>
+            <a class="btn" data-bind="click:$parent.addFile"><i class="icon-file"></i> Add a File</a>
+            <a class="btn" data-bind="click: $parent.addImage"><i class="icon-picture"></i> Add an Image</a>
+        </p>
+
+
+        <form data-bind="if: 'Note' == $parent.newItemType(), submit: addItem">
+            <!-- "Add a Note" Form -->
+            <p>
+                Note:<br />
+                <textarea data-bind="value:newItemNote" rows="5" cols="80" wrap="soft" placeholder="Enter a note (required)" />
+            </p>
+            <input class="btn" value="Submit" type="submit" />
+        </form>
+
+
+        <div data-bind="foreach:items">
+            <div class="folder-list-item">
+                <!-- ko if: ("Note" == type()) -->
+                <p><i class="icon-comment-alt icon-2x pull-left"></i> <span data-bind="text:note" /></p>
+                <p class="section-control">
+                    <em>
+                        Created <span data-bind="text:relativeCreatedDate" />
+                        by <span data-bind="text:createdBy().displayName" />
+                    </em>
+                </p>
+                <!-- /ko -->
+
+                <!-- ko if: ("File" == type()) -->
+                <p><i class="icon-file-alt icon-2x pull-left"></i> <a data-bind="attr: {href: url}, text: fileName">></a></p>
+                <p><span data-bind="text: note" /></p>
+                <p class="section-control">
+                    <em>
+                        Created <span data-bind="text: relativeCreatedDate" />
+                        by <span data-bind="text: createdBy().displayName" />
+                    </em>
+                </p>
+                <!-- /ko -->
+
+                <!-- ko if: ("Image" == type()) -->
+                <p><i class="icon-picture icon-2x pull-left"></i> <!--<img class="item-image" data-bind="attr: { src: url }" /> --></p>
+                <p><span data-bind="text: note" /></p>
+                <p class="section-control">
+                    <em>
+                        Created <span data-bind="text: relativeCreatedDate" />
+                        by <span data-bind="text: createdBy().displayName" />
+                    </em>
+                </p>
+                <!-- /ko -->
+            </div>
+        </div>
+
+
+        <h3>Permissions</h3>
+        <!--<p class="section-control">
+            <a class="btn" data-bind="click:managePermissions"><i class="icon-cog"></i> Manage permissions</a>
+        </p>-->
+        <div data-bind="foreach:permissions">
+            <p>
+                <i class="icon-user"></i> <span data-bind="text:user().displayName" /> (<span data-bind="text:accessDescription" />)
+            </p>
+        </div>
+
+
+        <h3>Logs</h3>
+        <div data-bind="foreach:logs">
+            <p class="folder-list-item" data-bind="text:message"></p>
+        </div>
+
+    </article>
+</section>

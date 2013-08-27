@@ -1,4 +1,4 @@
-﻿namespace FSIX.Controllers
+﻿namespace FSIX.Web.Controllers
 {
     using System;
     using System.Collections.Generic;

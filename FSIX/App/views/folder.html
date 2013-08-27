@@ -10,8 +10,9 @@
 
         <h3>Items</h3>
         <p class="section-control">
-            <a class="btn" data-ng-click="addNote()"><i class="icon-plus"></i> Add a note</a>
-            <a class="btn" data-ng-click="addFile()"><i class="icon-plus"></i> Add a file</a>
+            <a class="btn" data-ng-click="addNote()"><i class="icon-comment"></i> Add a Note</a>
+            <a class="btn" data-ng-click="addFile()"><i class="icon-file"></i> Add a File</a>
+            <a class="btn" data-ng-click="addImage()"><i class="icon-picture"></i> Add an Image</a>
         </p>
 
         <form data-ng-submit="folder.addItem()">
@@ -21,23 +22,21 @@
             <input value="Submit" type="submit" />
         </form>
 
-        <div data-ng-repeat="item in folder.items">
-            <div class="folder-list-item" data-ng-switch on="item.type">
-                <span data-ng-switch-when="Note">
-                    <i class="icon-comment-alt icon-2x pull-left"></i> {{item.note}}
-                    <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
-                </span>
-                <span data-ng-switch-when="File">
-                    <i class="icon-file-alt icon-2x pull-left"></i> <a data-ng-href="{{item.url}}">{{item.fileName}}</a>
-                    <p>{{item.note}}</p>
-                    <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
-                </span>
-                <span data-ng-switch-when="Image">
-                    <i class="icon-picture icon-2x pull-left"></i> <img class="item-image" data-ng-src="{{item.url}}" />
-                    <p>{{item.note}}</p>
-                    <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
-                </span>
-            </div>
+        <div data-ng-repeat="item in folder.items" class="folder-list-item" data-ng-switch on="item.type">
+            <span data-ng-switch-when="Note">
+                <p><i class="icon-comment-alt icon-2x pull-left"></i> {{item.note}}</p>
+                <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
+            </span>
+            <span data-ng-switch-when="File">
+                <p><i class="icon-file-alt icon-2x pull-left"></i> <a data-ng-href="{{item.url}}">{{item.fileName}}</a></p>
+                <p>{{item.note}}</p>
+                <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
+            </span>
+            <span data-ng-switch-when="Image">
+                <p><i class="icon-picture icon-2x pull-left"></i> <!--<img class="item-image" data-ng-src="{{item.url}}" /> --></p>
+                <p>{{item.note}}</p>
+                <p class="section-control"><em>Created {{item.relativeCreatedDate}} by {{item.createdBy.displayName}}</em></p>
+            </span>
         </div>
 
 
