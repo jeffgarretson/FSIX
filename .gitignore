@@ -3,7 +3,7 @@
 
 # Project-specific files
 HotTowel/
-App_Data/BodyPart_*
+App_Data/BodyPart*
 
 # User-specific files
 *.suo
