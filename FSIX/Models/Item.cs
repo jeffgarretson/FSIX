@@ -12,7 +12,7 @@ namespace FSIX.Models
         public int Id { get; set; }
 
         // Properties
-        public string Type { get; set; }    // { "Note", "File" }
+        public string Type { get; set; }    // { "Note", "File", "Image" }
         public string Note { get; set; }
         public string FileName { get; set; }
         public string MimeType { get; set; }

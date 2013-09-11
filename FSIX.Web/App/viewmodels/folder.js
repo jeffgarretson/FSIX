@@ -43,8 +43,6 @@ define(['dataservice', 'logger'], function (dataservice, logger) {
 
     function addNote() {
         var item = dataservice.createItem();
-        // How do I refer to the current folder? Do I need to pass it in from the ng-click event?
-        // item.name =
         dataservice.saveEntity(item)
             .then(addSucceeded)
             .fail(addFailed)

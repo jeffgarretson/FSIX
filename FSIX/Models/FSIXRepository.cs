@@ -5,6 +5,11 @@ using System.Security;
 using System.Security.Principal;
 using Breeze.WebApi;
 using System.Data.Entity;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Net;
 
 namespace FSIX.Models
 {
@@ -174,6 +179,37 @@ namespace FSIX.Models
         private bool throwCannotFindParentFolder()
         {
             throw new InvalidOperationException("Invalid item");
+        }
+
+        #endregion
+
+        #region Media Upload
+
+        public async Task AddMediaAsync(HttpContent media)
+        {
+            try
+            {
+                // Check permissions and throw error if anything is weird
+                // Set Type to "File" or "Image" depending on MimeType
+                // Add Item to DB
+
+                Task<byte[]> getMediaContentTask = media.ReadAsByteArrayAsync();
+
+                ContentDispositionHeaderValue disposition = media.Headers.ContentDisposition;
+                string FileName = (disposition != null && disposition.FileName != null) ? disposition.FileName : String.Empty;
+                string MimeType = media.Headers.ContentType.ToString();
+                byte[] Content = await getMediaContentTask;
+                int FileSize = Content.Length;
+
+                Item item = new Item();
+
+
+
+            }
+            catch
+            {
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            }
         }
 
         #endregion
