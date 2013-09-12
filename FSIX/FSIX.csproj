@@ -204,8 +204,13 @@
     <Compile Include="Migrations\201308201341580_ItemsColumnOrder.Designer.cs">
       <DependentUpon>201308201341580_ItemsColumnOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201309121509536_SplitMedia.cs" />
+    <Compile Include="Migrations\201309121509536_SplitMedia.Designer.cs">
+      <DependentUpon>201309121509536_SplitMedia.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Media.cs" />
     <Compile Include="Models\Configuration.cs" />
     <Compile Include="Models\FSIXContext.cs" />
     <Compile Include="Models\Item.cs" />
@@ -257,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201308201341580_ItemsColumnOrder.resx">
       <DependentUpon>201308201341580_ItemsColumnOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201309121509536_SplitMedia.resx">
+      <DependentUpon>201309121509536_SplitMedia.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

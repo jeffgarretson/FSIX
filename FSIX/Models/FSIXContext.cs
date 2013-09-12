@@ -20,6 +20,8 @@ namespace FSIX.Models
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Folder> Folders { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Media> Media { get; set; }
+        public DbSet<MediaInternalData> MediaInternalData { get; set; }
 
         public DbSet<Log> Logs { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -33,6 +35,8 @@ namespace FSIX.Models
             modelBuilder.Configurations.Add(new PermissionConfiguration());
             modelBuilder.Configurations.Add(new FolderConfiguration());
             modelBuilder.Configurations.Add(new ItemConfiguration());
+            modelBuilder.Configurations.Add(new MediaConfiguration());
+            modelBuilder.Configurations.Add(new MediaInternalDataConfiguration());
         }
     }
 }

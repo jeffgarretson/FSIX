@@ -60,6 +60,16 @@ namespace FSIX.Models
             }
         }
 
+        // Media - Return only media in folders accessible by logged-in user
+        public DbQuery<Media> Media
+        {
+            get
+            {
+                return (DbQuery<Media>)Context.Media
+                    .Where(m => m.Item.Folder.Permissions.Any(p => p.Username == Username));
+            }
+        }
+
         // TODO: Logs, Categories, Severities, Configurations
 
         // WhoAmI - Returns information about the logged-in user
@@ -84,6 +94,7 @@ namespace FSIX.Models
             if (entity is Permission) { return BeforeSavePermission(entity as Permission, entityInfo); }
             if (entity is Folder) { return BeforeSaveFolder(entity as Folder, entityInfo); }
             if (entity is Item) { return BeforeSaveItem(entity as Item, entityInfo); }
+            if (entity is Media) { return BeforeSaveMedia(entity as Media, entityInfo); }
 
             if (entity is Log) { return BeforeSaveLog(entity as Log, entityInfo); }
             if (entity is Category) { return BeforeSaveCategory(entity as Category, entityInfo); }
@@ -136,6 +147,12 @@ namespace FSIX.Models
             return (null == folder)
                        ? throwCannotFindParentFolder()
                        : folder.Permissions.Any(p => p.PermWrite && p.Username == Username) || throwCannotSaveEntityForThisUser();
+        }
+
+        private bool BeforeSaveMedia(Media media, EntityInfo info)
+        {
+            // Err on the side of caution. I'll loosen the screws a bit later...
+            return false;
         }
 
         private bool BeforeSaveLog(Log log, EntityInfo info)

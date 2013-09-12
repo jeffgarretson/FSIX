@@ -26,22 +26,22 @@ namespace FSIX.Web.Controllers
         }
 
         // GET api/media/5
-        [HttpGet]
-        public HttpResponseMessage Get(int id)
-        {
-            var data = from f in _repository.Context.Items
-                       where f.Id == id
-                       select f;
-            Item item = (Item)data.Single();
-            MemoryStream ms = new MemoryStream(item.Content);
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StreamContent(ms);
-            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(item.MimeType);
-            response.Content.Headers.ContentDisposition.FileName = item.FileName;
-            response.Content.Headers.ContentDisposition.CreationDate = item.CreatedTime;
-            response.Content.Headers.ContentDisposition.ModificationDate = item.ModifiedTime;
-            return response;
-        }
+        //[HttpGet]
+        //public HttpResponseMessage Get(int id)
+        //{
+        //    var data = from f in _repository.Context.Media
+        //               where f.Id == id
+        //               select f;
+        //    Media media = (Media)data.Single();
+        //    MemoryStream ms = new MemoryStream(item.Content);
+        //    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+        //    response.Content = new StreamContent(ms);
+        //    response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(media.MimeType);
+        //    response.Content.Headers.ContentDisposition.FileName = media.FileName;
+        //    response.Content.Headers.ContentDisposition.CreationDate = media.CreatedTime;
+        //    response.Content.Headers.ContentDisposition.ModificationDate = media.ModifiedTime;
+        //    return response;
+        //}
 
         // POST api/media/PostFile
         [HttpPost]

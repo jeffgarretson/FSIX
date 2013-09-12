@@ -8,15 +8,17 @@ namespace FSIX.Models
 {
     public partial class Item
     {
+        public Item()
+        {
+            this.Media = new HashSet<Media>();
+        }
+
         // PK
         public int Id { get; set; }
 
         // Properties
         public string Type { get; set; }    // { "Note", "File", "Image" }
         public string Note { get; set; }
-        public string FileName { get; set; }
-        public string MimeType { get; set; }
-        public byte[] Content { get; set; }
         public DateTime CreatedTime { get; internal set; }
         public DateTime ModifiedTime { get; internal set; }
 
@@ -26,6 +28,8 @@ namespace FSIX.Models
 
         public string CreatedByUsername { get; internal set; }
         public virtual User CreatedBy { get; internal set; }
+
+        public virtual ICollection<Media> Media { get; set; }
     }
 
     #region Configuration
