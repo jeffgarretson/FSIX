@@ -25,6 +25,7 @@ define(['moment'], function (moment) {
     function folderInitializer(folder) {
         folder.errorMessage = ko.observable("");
         folder.url = ko.observable("/#folder/" + folder.id());
+        folder.newItemUrl = ko.observable("/api/media/" + folder.id());
         folder.relativeExpirationDate = ko.observable(new moment(folder.expirationDate()).fromNow());
 
         folder.newItemType = ko.observable("");

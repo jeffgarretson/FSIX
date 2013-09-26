@@ -19,15 +19,15 @@ namespace FSIX.Models
         // Properties
         public string Type { get; set; }    // { "Note", "File", "Image" }
         public string Note { get; set; }
-        public DateTime CreatedTime { get; internal set; }
-        public DateTime ModifiedTime { get; internal set; }
+        public DateTime CreatedTime { get; /*internal*/ set; }
+        public DateTime ModifiedTime { get; /*internal*/ set; }
 
         // Navigation
         public int FolderId { get; set; }
         public virtual Folder Folder { get; set; }
 
-        public string CreatedByUsername { get; internal set; }
-        public virtual User CreatedBy { get; internal set; }
+        public string CreatedByUsername { get; /*internal*/ set; }
+        public virtual User CreatedBy { get; /*internal*/ set; }
 
         public virtual ICollection<Media> Media { get; set; }
     }
@@ -43,8 +43,8 @@ namespace FSIX.Models
                 .HasForeignKey(i => i.CreatedByUsername);
 
             // Properties
-            Property(i => i.CreatedTime).IsRequired();
-            Property(i => i.ModifiedTime).IsRequired();
+            Property(i => i.CreatedTime).IsRequired().HasColumnType("datetime2");
+            Property(i => i.ModifiedTime).IsRequired().HasColumnType("datetime2");
             Property(i => i.Type).IsRequired().HasMaxLength(10);
         }
     }

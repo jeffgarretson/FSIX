@@ -21,7 +21,7 @@ namespace FSIX.Models
         // Properties
         public string Name { get; set; }
         public string Description { get; set; }
-        public System.DateTime ExpirationDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
 
         // Navigation
         public virtual ICollection<Item> Items { get; set; }
@@ -35,7 +35,7 @@ namespace FSIX.Models
         public FolderConfiguration()
         {
             Property(f => f.Name).IsRequired();
-            Property(f => f.ExpirationDate).IsRequired();
+            Property(f => f.ExpirationDate).IsRequired().HasColumnType("datetime2");
         }
     }
     #endregion

@@ -1,5 +1,5 @@
 ﻿using FSIX.Models;
-using FSIX.Web.Util;
+using FSIX.Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,28 +25,41 @@ namespace FSIX.Web.Controllers
             _repository = new FSIXRepository(User);
         }
 
-        // GET api/media/5
-        //[HttpGet]
-        //public HttpResponseMessage Get(int id)
-        //{
-        //    var data = from f in _repository.Context.Media
-        //               where f.Id == id
-        //               select f;
-        //    Media media = (Media)data.Single();
-        //    MemoryStream ms = new MemoryStream(item.Content);
-        //    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-        //    response.Content = new StreamContent(ms);
-        //    response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(media.MimeType);
-        //    response.Content.Headers.ContentDisposition.FileName = media.FileName;
-        //    response.Content.Headers.ContentDisposition.CreationDate = media.CreatedTime;
-        //    response.Content.Headers.ContentDisposition.ModificationDate = media.ModifiedTime;
-        //    return response;
-        //}
-
-        // POST api/media/PostFile
-        [HttpPost]
-        public async Task<HttpResponseMessage> Upload()
+        // GET api/media/1
+        public HttpResponseMessage Get(int id)
         {
+            int mediaId = id;
+            var data = from f in _repository.Context.Media
+                       where f.Id == mediaId
+                       select f;
+            Media media = (Media)data.Single();
+            // This will be a file stream, not a MemoryStream
+            //MemoryStream ms = new MemoryStream(item.Content);
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            //response.Content = new StreamContent(ms);
+            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(media.MimeType);
+            response.Content.Headers.ContentDisposition.FileName = media.FileName;
+            response.Content.Headers.ContentDisposition.CreationDate = media.CreatedTime;
+            response.Content.Headers.ContentDisposition.ModificationDate = media.ModifiedTime;
+            return response;
+        }
+
+        // POST api/media/5
+        [HttpPost]
+        //public async Task<IEnumerable<Item>> Post(int id)
+        public async Task<int> Post(int id)
+        {
+            int folderId = id;
+
+            User user = new User();
+            user = _repository.Context.Users.Find(User.Identity.Name.Split('\\')[1]);
+            
+            if (!_repository.VerifyFolderWritePermission(folderId))
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+
+            // Verify we have a multipart payload
             if (!Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
@@ -57,61 +70,72 @@ namespace FSIX.Web.Controllers
 
             try
             {
-                //HttpResponseMessage response = new HttpResponseMessage();
-                StringBuilder sb = new StringBuilder();  // Holds the response body
+                // Find the specified folder, create a new Item record, and attach it to the folder
+                Folder folder = _repository.Context.Folders.Find(folderId);
+                Item item = _repository.Context.Items.Add(new Item());
+                if ( (null == folder) || (null == item) )
+                {
+                    throw new UnauthorizedAccessException("Access denied");
+                }
+                else
+                {
+                    item.Type = "File";  // TODO: push this property from Item down to Media
 
+                    // It's really stupid that I have to supply values for these, because
+                    // _repository won't trust them anyway.
+                    item.CreatedTime = DateTime.UtcNow;
+                    item.ModifiedTime = DateTime.UtcNow;
+                    item.CreatedBy = user;
+                    
+                    folder.Items.Add(item);
+                }
+
+
+                // Wait for form data to finish loading
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                // Q: Why not just pass a Collection<HttpContent> to the repository?
-                // A: Because understanding HTTP is not the repository's job. This is a Web API controller; do it here.
-                //return _repository.AddMedia(provider.Contents);
-
-                // Process form data
-                foreach (var key in provider.FormData.AllKeys)
-                {
-                    foreach (var val in provider.FormData.GetValues(key))
-                    {
-                        sb.Append(string.Format("{0}: {1}\n", key, val));
-                    }
-                }
+                // *** TODO: Process form data and set Item attributes (e.g., Note)
 
                 // Process file data
                 foreach (var file in provider.FileData)
                 {
                     FileInfo fileInfo = new FileInfo(file.LocalFileName);
-                    sb.Append(string.Format("Uploaded file: {0} ({1} bytes)\n", fileInfo.Name, fileInfo.Length));
+
+                    // Create new Media record, attach it to its parent Item, and set media metadata
+                    Media media = _repository.Context.Media.Add(new Media());
+                    media.Item = item;
+                    media.FileName = fileInfo.Name;
+                    media.MimeType = file.Headers.ContentType.ToString();
+                    media.Bytes = fileInfo.Length;
+                    media.CreatedTime = (null == file.Headers.ContentDisposition.CreationDate) ?
+                        DateTime.UtcNow : ((DateTimeOffset)file.Headers.ContentDisposition.CreationDate).UtcDateTime;
+                    media.ModifiedTime = (null == file.Headers.ContentDisposition.ModificationDate) ?
+                        DateTime.UtcNow : ((DateTimeOffset)file.Headers.ContentDisposition.ModificationDate).UtcDateTime;
+                    media.SubmittedBy = user;
+
+                    // Create new MediaStorage record to save media storage/encryption details to DB
+                    MediaStorage mediaStorage = _repository.Context.MediaStorage.Add(new MediaStorage());
+                    media.MediaStorage = mediaStorage;
+                    mediaStorage.LocalFileName = file.LocalFileName;
+                    // *** TODO: get the initialization vector from the stream provider
+                    mediaStorage.IV = Enumerable.Repeat((byte)0x00, 32).ToArray();
+
+                    // Save changes to the database
+                    _repository.Context.SaveChanges();
                 }
 
-                //provider.Contents.Select(
-                //    async (media) =>
-                //    {
-                //        //ContentDispositionHeaderValue disposition = media.Headers.ContentDisposition;
-                //        //string FileName = (disposition != null && disposition.FileName != null) ? disposition.FileName : String.Empty;
-                //        //string MimeType = media.Headers.ContentType.ToString();
-                //        //byte[] Content = await media.ReadAsByteArrayAsync();
-                //        //int FileSize = Content.Length;
+                // Will this work, or should I just return item.Id as int and leave it up to the client
+                // to fetch the new item in a separate request?
+                //return _repository.Context.Items
+                //    .Include("Media")
+                //    .Where(i => i.Id == item.Id);
 
-                //        await _repository.AddMediaAsync(media);
+                return item.Id;
 
-                //        //mediaAttributes = new
-                //        //{
-                //        //    FileName = FileName,
-                //        //    MimeType = MimeType,
-                //        //    FileSize = FileSize,
-                //        //    Content = Content,
-                //        //};
-                //    });
-
-                ////_repository.AddMedia(mediaAttributes);
-                
-                return new HttpResponseMessage()
-                {
-                    Content = new StringContent(sb.ToString())
-                };
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
 
         }

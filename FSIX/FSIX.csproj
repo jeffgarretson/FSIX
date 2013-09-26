@@ -160,6 +160,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201309172142521_ConvertDateTimeToDateTime2.cs" />
+    <Compile Include="Migrations\201309172142521_ConvertDateTimeToDateTime2.Designer.cs">
+      <DependentUpon>201309172142521_ConvertDateTimeToDateTime2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Storage\MediaStore.cs" />
     <Compile Include="Migrations\201308141352505_InitialCreate.cs" />
     <Compile Include="Migrations\201308141352505_InitialCreate.Designer.cs">
       <DependentUpon>201308141352505_InitialCreate.cs</DependentUpon>
@@ -221,8 +226,11 @@
     <Compile Include="Models\FSIXRepository.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\Storage\MultipartFormDataEncryptedStreamProvider.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Util\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
@@ -265,6 +273,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201309121509536_SplitMedia.resx">
       <DependentUpon>201309121509536_SplitMedia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201309172142521_ConvertDateTimeToDateTime2.resx">
+      <DependentUpon>201309172142521_ConvertDateTimeToDateTime2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

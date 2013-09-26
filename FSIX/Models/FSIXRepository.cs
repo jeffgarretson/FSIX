@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Net;
+using System.Collections.Generic;
 
 namespace FSIX.Models
 {
@@ -84,8 +85,12 @@ namespace FSIX.Models
 
         #region Save processing
 
-        // TODO: Delegate to helper classes when it gets more complicated
+        protected override Dictionary<Type, System.Collections.Generic.List<EntityInfo>> BeforeSaveEntities(System.Collections.Generic.Dictionary<Type, System.Collections.Generic.List<EntityInfo>> saveMap)
+        {
+            return base.BeforeSaveEntities(saveMap);
+        }
 
+        // TODO: Delegate to helper classes when it gets more complicated
         protected override bool BeforeSaveEntity(EntityInfo entityInfo)
         {
             var entity = entityInfo.Entity;
@@ -95,6 +100,7 @@ namespace FSIX.Models
             if (entity is Folder) { return BeforeSaveFolder(entity as Folder, entityInfo); }
             if (entity is Item) { return BeforeSaveItem(entity as Item, entityInfo); }
             if (entity is Media) { return BeforeSaveMedia(entity as Media, entityInfo); }
+            if (entity is MediaStorage) { return BeforeSaveMediaStorage(entity as MediaStorage, entityInfo); }
 
             if (entity is Log) { return BeforeSaveLog(entity as Log, entityInfo); }
             if (entity is Category) { return BeforeSaveCategory(entity as Category, entityInfo); }
@@ -130,10 +136,10 @@ namespace FSIX.Models
         private bool BeforeSaveItem(Item item, EntityInfo info)
         {
             // Don't trust the client
+            item.CreatedByUsername = Username;
             item.ModifiedTime = DateTime.UtcNow;
             if (info.EntityState == EntityState.Added)
             {
-                item.CreatedByUsername = Username;
                 item.CreatedTime = item.ModifiedTime;
             }
             else if (item.CreatedByUsername != Username)
@@ -151,8 +157,22 @@ namespace FSIX.Models
 
         private bool BeforeSaveMedia(Media media, EntityInfo info)
         {
-            // Err on the side of caution. I'll loosen the screws a bit later...
-            return false;
+            // Media expire in 7 days (TODO: make this configurable)
+            TimeSpan ttl = new TimeSpan(7, 0, 0, 0);
+            media.ExpirationTime = DateTime.UtcNow.Add(ttl);
+
+            media.SubmittedByUsername = Username;
+
+            // Make sure user has write permission on the folder
+            var folder = ValidationContext.Folders.Find(media.Item.FolderId);
+            return (null == folder)
+                       ? throwCannotFindParentFolder()
+                       : folder.Permissions.Any(p => p.PermWrite && p.Username == Username) || throwCannotSaveEntityForThisUser();
+        }
+
+        private bool BeforeSaveMediaStorage(MediaStorage mediastorage, EntityInfo info)
+        {
+            return true;
         }
 
         private bool BeforeSaveLog(Log log, EntityInfo info)
@@ -199,6 +219,19 @@ namespace FSIX.Models
         }
 
         #endregion
+
+        public bool VerifyFolderWritePermission(int folderId)
+        {
+            var folder = ValidationContext.Folders.Find(folderId);
+            if (null == folder)
+            {
+                return false;
+            }
+            else
+            {
+                return folder.Permissions.Any(p => p.PermWrite && p.Username == Username);
+            }
+        }
 
         #region Media Upload
 

@@ -21,7 +21,7 @@ namespace FSIX.Models
         public DbSet<Folder> Folders { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Media> Media { get; set; }
-        public DbSet<MediaInternalData> MediaInternalData { get; set; }
+        public DbSet<MediaStorage> MediaStorage { get; set; }
 
         public DbSet<Log> Logs { get; set; }
         public DbSet<Category> Categories { get; set; }

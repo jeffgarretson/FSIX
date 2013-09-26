@@ -7,8 +7,8 @@ namespace FSIX.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.Items", "CreatedTime", c => c.DateTime(nullable: false, defaultValueSql: "GETDATE()"));
-            AddColumn("dbo.Items", "ModifiedTime", c => c.DateTime(nullable: false, defaultValueSql: "GETDATE()"));
+            AddColumn("dbo.Items", "CreatedTime", c => c.DateTime(nullable: false));
+            AddColumn("dbo.Items", "ModifiedTime", c => c.DateTime(nullable: false));
 
             // AddColumn("dbo.Items", "CreatedByUsername", c => c.String(nullable: false, maxLength: 100));
             // Let's do this in SQL so we can set a default only for the migration

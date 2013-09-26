@@ -72,5 +72,25 @@
             return _repository.WhoAmI;
         }
 
+        //[HttpGet]
+        //public int Test()
+        //{
+        //    Media media = _repository.Context.Media.Add(new Media());
+        //    media.FileName = "Bob";
+        //    media.MimeType = "text/plain";
+        //    media.Bytes = 100;
+        //    media.CreatedTime = DateTime.Now;
+        //    media.ModifiedTime = DateTime.Now;
+        //    media.ExpirationTime = DateTime.Now;
+
+        //    //MediaInternalData mediastore = _repository.Context.MediaInternalData.Add(new MediaInternalData());
+        //    media.MediaStorage = new MediaStorage();
+
+        //    media.MediaStorage.IV = Enumerable.Repeat((byte)0x20, 32).ToArray();
+        //    media.MediaStorage.LocalFileName = "BodyPart_BlahBlahBlah.txt";
+        //    int foo = _repository.Context.SaveChanges();
+        //    return foo;
+        //}
+
     }
 }

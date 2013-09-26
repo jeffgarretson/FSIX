@@ -24,19 +24,13 @@
 
         <h3>Add an Item</h3>
 
-        <form id="media-upload-form" action="/api/media/upload" enctype="multipart/form-data" method="post">
-            <!-- Media upload form -->
-            <p>
-                File: <input type="file" name="file" /><br />
-            </p>
-            <input type="hidden" /> <!--data-bind="value: newItemId"-->
-        </form>
-
-        <form id="add-item-form" data-bind="if: 'Note' == $parent.newItemType(), submit: addItem">
-            <!-- "Add a Note" Form -->
+        <form id="add-item-form" data-bind="attr: { action: newItemUrl }" enctype="multipart/form-data" method="post">
             <p>
                 Note:<br />
                 <textarea data-bind="value: newItemNote" style="width:100%" rows="2" cols="80" wrap="soft" placeholder="Enter a note" name="note" /><br />
+            </p>
+            <p>
+                File: <input type="file" name="file" /><br />
             </p>
             <input class="btn" value="Submit" type="submit" />
         </form>

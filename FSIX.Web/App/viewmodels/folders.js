@@ -1,4 +1,4 @@
-﻿define(['durandal/app', 'dataservice', 'logger'], function (app, dataservice, logger) {
+﻿define(['durandal/app', 'moment', 'dataservice', 'logger'], function (app, moment, dataservice, logger) {
 
     vm = {
         activate: activate,
@@ -56,8 +56,16 @@
         var folder = dataservice.createFolder({
             name: vm.newFolder.name(),
             description: vm.newFolder.description(),
-            expirationDate: new Date("2013/09/11")
+            expirationDate: new moment().add('days', 14)
         });
+        var permission = dataservice.createPermission({
+            username: "JeffGarretson",
+            isOwner: true,
+            permRead: true,
+            permWrite: true,
+            permShare: true
+        })
+        permission.folder(folder);
         dataservice.saveChanges().fail(addFailed);
         vm.folders.push(folder);   // .unshift()?
 
