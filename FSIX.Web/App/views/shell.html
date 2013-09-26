@@ -1,21 +1,15 @@
 ﻿<div>
-    <div class="navbar">
-        <div class="navbar-inner">
-        <!--<div>-->
-            <a class="brand" data-bind="attr: { href: router.navigationModel()[0].hash }">
-                <!--<i class="icon-home"></i>-->
-                <span>Frictionless Secure Information eXchange</span>
-            </a>
-            <ul class="nav pull-right" data-bind="foreach: router.navigationModel">
-                <li data-bind="css: { active: isActive }">
-                    <a data-bind="attr: { href: hash }, html: title"></a>
-                </li>
-            </ul>
-            <div class="loader pull-right" data-bind="css: { active: router.isNavigating }">
-                <i class="icon-spinner icon-large icon-spin"></i>
-            </div>
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" data-bind="attr: { href: router.navigationModel()[0].hash }">FSIX</a>
+        </div>
+        <div class="nav pull-right" data-bind="foreach: router.navigationModel">
+            <a class="btn btn-default navbar-btn" data-bind="attr: { href: hash }, html: title, css: { active: isActive }"></a>
+        </div>
+        <div class="loader pull-right" data-bind="css: { active: router.isNavigating }">
+            <i class="icon-spinner icon-large icon-spin"></i>
         </div>
     </div>
         
-    <div class="container-fluid page-host" data-bind="router: { transition:'entrance', cacheViews:true }"></div>
+    <div class="container page-host" data-bind="router: { transition:'entrance', cacheViews:true }"></div>
 </div>
