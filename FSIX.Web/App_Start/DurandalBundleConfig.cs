@@ -26,7 +26,7 @@ namespace FSIX.Web {
           //.Include("~/Content/bootstrap/bootstrap-theme.min.css")
           .Include("~/Content/font-awesome.min.css")
 		  .Include("~/Content/durandal.css")
-          .Include("~/Content/starterkit.css")
+          //.Include("~/Content/starterkit.css")
           .Include("~/Content/toastr.css")
           .Include("~/Content/app.css")
         );

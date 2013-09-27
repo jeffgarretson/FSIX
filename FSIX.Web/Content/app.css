@@ -1,19 +1,18 @@
-﻿* {
+﻿/** {
     box-sizing: border-box;
+}*/
+
+body {
+    color: #444;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.125;
+    padding-top: 50px;
 }
 
-/*html, body {
-    color: #444;
-    background-color: #fafafa;
-    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
-    font-size: 1.125em;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow-x: hidden;
-}
-.hidden {
-    overflow-x: hidden;
+/*.page-host {
+    position: relative;
+    top: 40px;
 }*/
 
 /*#applicationHost {
@@ -34,8 +33,12 @@
     color: #D44;
 }*/
 
+h2.page-title {
+    padding-top: 20px;
+}
+
 h3 {
-    margin-top: 1em;
+    margin-top: 1.5em;
 }
 
 /*a {
@@ -105,8 +108,29 @@ a:focus {
 }
 */
 
+.splash {
+    text-align: center;
+    margin: 10% 0 0 0;
+}
+
+.splash .message {
+    font-size: 5em;
+    line-height: 1.5em;
+    -webkit-text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+    /*text-transform: uppercase;*/
+}
+
+.splash .icon-spinner {
+    text-align: center;
+    display: inline-block;
+    font-size: 5em;
+    margin-top: 50px;
+}
+
 .loader {
     visibility: hidden;
+    padding-right: 1.5em;
 }
 .loader.active {
     visibility: visible;
