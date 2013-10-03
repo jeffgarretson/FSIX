@@ -24,10 +24,16 @@ define(['moment'], function (moment) {
 
     function folderInitializer(folder) {
         folder.errorMessage = ko.observable("");
-        folder.url = ko.observable("/#folder/" + folder.id());
-        folder.newItemUrl = ko.observable("/api/media/" + folder.id());
-        folder.relativeExpirationDate = ko.observable(new moment(folder.expirationDate()).fromNow());
+        //folder.url = ko.observable("/#folder/" + folder.id());
+        folder.url = ko.computed(function () {
+            return "/#folder/" + folder.id()
+        });
+        //folder.relativeExpirationDate = ko.observable(new moment(folder.expirationDate()).fromNow());
+        folder.relativeExpirationDate = ko.computed(function () {
+            return new moment(folder.expirationDate()).fromNow()
+        });
 
+        folder.newItemUrl = ko.observable("/api/media/" + folder.id());
         folder.newItemType = ko.observable("");
         folder.newItemNote = ko.observable("");
         folder.newItemFileName = ko.observable("");
@@ -82,6 +88,10 @@ define(['moment'], function (moment) {
             this.newItemFileName("");
             this.newItemMimeType("");
             this.newItemContent(null);
+        };
+
+        Folder.prototype.expire = function () {
+            return dataservice.expireFolder(this);
         };
 
         Folder.prototype.deleteItem = function (item) {

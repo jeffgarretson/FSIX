@@ -1,20 +1,27 @@
 ﻿// Folder ViewModel
-define(['dataservice', 'logger'], function (dataservice, logger) {
+define(
+    ['plugins/router', 'durandal/app', 'dataservice', 'logger'],
+    function (router, app, dataservice, logger) {
 
-    vm = {
+    vmFolder = {
         displayName: "Folder Details",
         folders: ko.observableArray(),
         error: ko.observable(),
         activate: activate,
         getFolderDetails: getFolderDetails,
         newItemType: ko.observable("Note"),
+        showNewItemForm: showNewItemForm,
+        newItemFormVisible: ko.observable(false),
+        postItem: postItem,
+        cancelCreateItem: cancelCreateItem,
         addNote: addNote,
         addFile: addFile,
         addImage: addImage,
-        managePermissions: managePermissions
+        managePermissions: managePermissions,
+        expireFolder: expireFolder
     };
 
-    return vm;
+    return vmFolder;
 
     function activate(folderId) {
         getFolderDetails(parseInt(folderId));
@@ -24,12 +31,11 @@ define(['dataservice', 'logger'], function (dataservice, logger) {
     function getFolderDetails(id) {
         dataservice.getFolderDetails(id)
             .then(querySucceeded)
-            .fail(queryFailed)
-            .fin(refreshView);
+            .fail(queryFailed);
     }
 
     function querySucceeded(data) {
-        vm.folders(data);
+        vmFolder.folders(data);
         logger.log("Fetched items", data, "folder.js", false);
     }
 
@@ -41,12 +47,21 @@ define(['dataservice', 'logger'], function (dataservice, logger) {
         dataservice.saveEntity(entity).fin(refreshView);
     }
 
+    function showNewItemForm() {
+        vmFolder.newItemFormVisible(true);
+    }
+
+    function postItem() { }
+
+    function cancelCreateItem() {
+        vmFolder.newItemFormVisible(false);
+    }
+
     function addNote() {
         var item = dataservice.createItem();
         dataservice.saveEntity(item)
             .then(addSucceeded)
-            .fail(addFailed)
-            .fin(refreshView);
+            .fail(addFailed);
 
         function addSucceeded() {
             showAddedItem(item);
@@ -70,10 +85,20 @@ define(['dataservice', 'logger'], function (dataservice, logger) {
     }
 
     function showAddedItem(item) {
-        vm.folders.items.unshift(item);
+        vmFolder.folders.items.unshift(item);
     }
 
-    function refreshView() { /* $scope.$apply(); */ }
+    function expireFolder() {
+        var that = this;
+        app.showMessage("Expire this folder and PERMANENTLY DELETE all contents?", "Expire folder", ["Yes", "No"])
+            .then(function (response) {
+                if ("Yes" == response) {
+                    that.expire()
+                        .then(router.navigateBack())
+                        .then(logger.log('Folder "' + that.name() + '" expired', null, "folder.js", true));
+                }
+            });
+    };
 
     //#endregion
 

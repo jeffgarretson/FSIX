@@ -1,6 +1,7 @@
 ﻿define(
     ['models/folder', 'models/item', 'models/permission', 'logger'],
     function (folder, item, permission, logger) {
+        "use strict";
 
         configureBreeze();
         var manager = new breeze.EntityManager("breeze/fsix");
@@ -16,7 +17,7 @@
             createPermission: createPermission,
             createItem: createItem,
 
-            deleteFolder: deleteFolder,
+            expireFolder: expireFolder,
             deletePermission: deletePermission,
             deleteItem: deleteItem,
 
@@ -38,6 +39,7 @@
         function getFolders(forceRefresh) {
             var query = breeze.EntityQuery
                     .from("folders")
+                    .where("expirationDate", ">", new Date())
                     .orderBy("expirationDate DESC, name");
             return manager.executeQuery(query)
                 .then(getSucceeded);
@@ -71,21 +73,28 @@
             return manager.createEntity("Item", initialValues);
         }
 
-        function deleteFolder(folder) {
+        function expireFolder(folder) {
             // Neither breeze nor server cascade deletes so we have to do it
-
             // ^^^^ Actually, is that true with EF5? Docs seem to suggest that 1..1
             //      relationships will cascade on delete by convention.
+            // Apparently it is still true.
 
             // Delete all items in the folder
-            //var items = folder.items.slice();
-            //items.forEach(function (entity) { entity.entityAspect.setDeleted(); });
+            var items = folder.items.slice();
+            items.forEach(function (entity) {
+                // Delete all media attached to the item
+                var media = entity.media.slice();
+                media.forEach(function (entity) { entity.entityAspect.setDeleted(); });
+                // Now delete the item itself
+                entity.entityAspect.setDeleted();
+            });
 
             // Delete all permissions
             //var permissions = folder.permissions.slice();
             //permissions.forEach(function (entity) { entity.entityAspect.setDeleted(); });
 
-            folder.entityAspect.setDeleted();
+            //folder.entityAspect.setDeleted();
+            folder.expirationDate(new Date());
             return saveEntity(folder);
         }
 
@@ -107,7 +116,7 @@
             return manager.saveChanges().then(saveSucceeded).fail(saveFailed);
 
             function saveSucceeded() {
-                logger.log("saved " + description);
+                logger.log("saved " + description, null, "dataservice.js", false);
             }
 
             function saveFailed(error) {
@@ -116,7 +125,12 @@
                     getErrorMessage(error);
 
                 masterEntity.errorMessage = msg;
+                logger.error("Failed to save folder", error, "dataservice.js", true);
+
                 logger.log(msg, 'error');
+
+                alert(msg);
+
                 // Let user see invalid value briefly before reverting
                 $timeout(function () { manager.rejectChanges(); }, 1000);
                 throw error; // so caller can see failure
@@ -125,9 +139,9 @@
         function describeSaveOperation(entity) {
             var statename = entity.entityAspect.entityState.name.toLowerCase();
             var typeName = entity.entityType.shortName;
-            var title = entity.title;
-            title = title ? (" '" + title + "'") : "";
-            return statename + " " + typeName + title;
+            var name = entity.name;
+            name = name ? (" '" + name + "'") : "";
+            return statename + " " + typeName + name;
         }
         function getErrorMessage(error) {
             var reason = error.message;
@@ -146,13 +160,16 @@
             }
         }
 
+
+
+
         function saveChanges() {
             return manager.saveChanges()
                 .then(saveSucceeded)
                 .fail(saveFailed);
 
             function saveSucceeded(saveResult) {
-                logger.success("# of items saved = " + saveResult.entities.length);
+                logger.log("# of items saved = " + saveResult.entities.length);
                 logger.log(saveResult);
             }
 
@@ -191,6 +208,9 @@
             } catch (e) { /* eat it for now */ }
             return message;
         }
+
+
+
 
         function configureBreeze() {
             // configure to use camelCase

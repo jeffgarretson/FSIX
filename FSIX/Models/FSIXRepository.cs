@@ -131,7 +131,8 @@ namespace FSIX.Models
                 // TODO: Make sure everything has Username set
                 return true;
             }
-            return folder.Permissions.Any(p => p.IsOwner && p.Username == Username) || throwCannotSaveEntityForThisUser();
+            var validationFolder = ValidationContext.Folders.Find(folder.Id);
+            return validationFolder.Permissions.Any(p => p.IsOwner && p.Username == Username) || throwCannotSaveEntityForThisUser();
         }
 
         private bool BeforeSaveItem(Item item, EntityInfo info)

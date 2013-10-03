@@ -136,3 +136,7 @@ a:focus {
     visibility: visible;
 }
 
+.jumbotron-footer {
+    margin-bottom: 0;
+}
+

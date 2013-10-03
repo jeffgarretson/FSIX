@@ -9,97 +9,9 @@
     <div class="container">
 
         <article class="folder-list-item" data-bind="ifnot: folders().length">
-            <h2 class="page-title"><!--<i class="icon-exclamation-sign"></i> -->Recent Items</h2>
+            <h2 class="page-title"><!--<i class="icon-reorder"></i> -->Inbox</h2>
             <p>This is where we'll put a list of items that (1) you can access and (2) you didn't upload.
                 Most recent items will be listed first.</p>
-        </article>
-
-        <article class="folder-list-item" data-bind="foreach:folders">
-
-        
-            <h2 class="page-title"><i class="icon-folder-open-alt"></i> <span data-bind="text:name" /></h2>
-            <p class="section-control"><i class="icon-time"></i> <em>Expires <span data-bind="text:relativeExpirationDate" /></em></p>
-            <p data-bind="text:description"></p>
-
-
-            <!--
-            <p class="section-control">
-                <a class="btn" data-bind="click:$parent.addNote"><i class="icon-comment"></i> Add a Note</a>
-                <a class="btn" data-bind="click:$parent.addFile"><i class="icon-file"></i> Add a File</a>
-                <a class="btn" data-bind="click: $parent.addImage"><i class="icon-picture"></i> Add an Image</a>
-            </p>
-            -->
-
-
-            <h3>Add an Item</h3>
-
-            <form id="add-item-form" data-bind="attr: { action: newItemUrl }" enctype="multipart/form-data" method="post">
-                <p>
-                    Note:<br />
-                    <textarea data-bind="value: newItemNote" style="width:100%" rows="2" cols="80" wrap="soft" placeholder="Enter a note" name="note" /><br />
-                </p>
-                <p>
-                    File: <input type="file" name="file" /><br />
-                </p>
-                <input class="btn" value="Submit" type="submit" />
-            </form>
-
-
-            <h3>Items</h3>
-
-            <div data-bind="foreach:items">
-                <div class="folder-list-item">
-                    <!-- ko if: ("Note" == type()) -->
-                    <p><i class="icon-comment-alt icon-2x pull-left"></i> <span data-bind="text:note" /></p>
-                    <p class="section-control">
-                        <em>
-                            Created <span data-bind="text:relativeCreatedDate" />
-                            by <span data-bind="text:createdBy().displayName" />
-                        </em>
-                    </p>
-                    <!-- /ko -->
-
-                    <!-- ko if: ("File" == type()) -->
-                    <p><i class="icon-file-alt icon-2x pull-left"></i> <a data-bind="attr: {href: url}, text: fileName">></a></p>
-                    <p><span data-bind="text: note" /></p>
-                    <p class="section-control">
-                        <em>
-                            Created <span data-bind="text: relativeCreatedDate" />
-                            by <span data-bind="text: createdBy().displayName" />
-                        </em>
-                    </p>
-                    <!-- /ko -->
-
-                    <!-- ko if: ("Image" == type()) -->
-                    <p><i class="icon-picture icon-2x pull-left"></i> <!--<img class="item-image" data-bind="attr: { src: url }" /> --></p>
-                    <p><span data-bind="text: note" /></p>
-                    <p class="section-control">
-                        <em>
-                            Created <span data-bind="text: relativeCreatedDate" />
-                            by <span data-bind="text: createdBy().displayName" />
-                        </em>
-                    </p>
-                    <!-- /ko -->
-                </div>
-            </div>
-
-
-            <h3>Permissions</h3>
-            <!--<p class="section-control">
-                <a class="btn" data-bind="click:managePermissions"><i class="icon-cog"></i> Manage permissions</a>
-            </p>-->
-            <div data-bind="foreach:permissions">
-                <p>
-                    <i class="icon-user"></i> <span data-bind="text:user().displayName" /> (<span data-bind="text:accessDescription" />)
-                </p>
-            </div>
-
-
-            <h3>Logs</h3>
-            <div data-bind="foreach:logs">
-                <p class="folder-list-item" data-bind="text:message"></p>
-            </div>
-
         </article>
 
     </div>
