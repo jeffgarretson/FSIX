@@ -9,10 +9,44 @@
 
 <section data-bind="foreach: folders">
 
+    <div data-bind="if: $parent.editFolderDetailsFormVisible">
+        <div class="jumbotron">
+            <div class="container">
+                <h1 class="page-title">Edit Folder Details</h1>
+                <!-- TODO: add an updateFolderDetails method to the Folder prototype -->
+                <form id="edit-folder-details-form" data-bind="submit: $parent.updateFolderDetails" role="form">
+                    <div>
+                        <!-- Folder name -->
+                        <div class="form-group">
+                            <label for="input-folder-name">Name:</label>
+                            <input id="input-folder-name" class="form-control" autofocus="autofocus"
+                                data-bind="value: name" placeholder="Folder name (required)" />
+                        </div>
+                        <!-- Folder description -->
+                        <div class="form-group">
+                            <label for="input-folder-desc">Description:</label>
+                            <textarea id="input-folder-desc" class="form-control" rows="5"
+                                data-bind="value: description" placeholder="Folder description (optional)" />
+                        </div>
+
+                        <!-- TODO: New folder permissions panel -->
+
+                        <!-- Create folder button -->
+                        <a class="btn btn-primary" data-bind="click: $parent.updateFolderDetails">
+                            <i class="icon-cloud-upload"></i> Update</a>
+                        <!-- Cancel new folder button -->
+                        <a class="btn btn-danger" data-bind="click: $parent.cancelEditFolderDetails">
+                            <i class="icon-trash"></i> Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div data-bind="if: $parent.newItemFormVisible">
         <div class="jumbotron">
             <div class="container">
-                <h2 class="page-title">Add New Item in <span data-bind="text: name" /></h2>
+                <h1 class="page-title">Add New Item in <span data-bind="text: name" /></h1>
                 <form id="add-item-form" data-bind="attr: { action: newItemUrl }" enctype="multipart/form-data" method="post">
                     <p>
                         Note:<br />
@@ -30,27 +64,30 @@
 
     <div class="container">
 
-        <h2 class="page-title"><i class="icon-folder-open-alt"></i> <span data-bind="text: name" /></h2>
-        <span class="section-control">
-            <a class="btn btn-danger pull-right" data-bind="click: $parent.expireFolder"
-                title="PERMANENTLY DELETE all items in this folder, mark the folder as expired, and remove it from the list of active folders.">
-                <i class="icon-trash"></i> Expire</a>
-            <a class="btn btn-default pull-right" data-bind="click: $parent.editFolderDetails"
-                title="Change folder name or description"><i class="icon-edit"></i> Edit</a>
-        </span>
-        <p class="section-control"><i class="icon-time"></i> <em>Expires <span data-bind="text:relativeExpirationDate" /></em></p>
-        <p data-bind="text:description"></p>
+        <div data-bind="if: !$parent.editFolderDetailsFormVisible()">
+            <div class="pull-right page-title" data-bind="if: !$parent.newItemFormVisible()">
+                <a class="btn btn-default" data-bind="click: $parent.editFolderDetails"
+                    title="Change folder name or description"><i class="icon-edit"></i> Edit</a>
+                <a class="btn btn-danger" data-bind="click: $parent.expireFolder"
+                    title="PERMANENTLY DELETE all items in this folder, mark the folder as expired, and remove it from the list of active folders.">
+                    <i class="icon-trash"></i> Expire</a>
+            </div>
+            <h1 class="page-title"><i class="icon-folder-open-alt"></i> <span data-bind="text: name" /></h1>
+            <p class="section-control"><i class="icon-time"></i> <em>Expires <span data-bind="text: relativeExpirationDate" /></em></p>
+            <p data-bind="text: description"></p>
+            <hr />
+        </div>
 
 
         <!--<h3>Items</h3>-->
-        <hr />
 
-        <span data-bind="if: !$parent.newItemFormVisible()">
-            <a class="btn btn-default pull-right" data-bind="click: $parent.showNewItemForm"><i class="icon-plus"></i> New item</a>
-        </span>
+        <div class="pull-right" data-bind="if: !$parent.newItemFormVisible() && !$parent.editFolderDetailsFormVisible()">
+            <a class="btn btn-default pull-right" data-bind="click: $parent.showNewItemForm">
+                <i class="icon-plus"></i> New item</a>
+        </div>
 
         <div data-bind="ifnot: items().length">
-            <p>(This folder is empty)</p>
+            <p>(This folder is empty)<br />&nbsp;</p>
         </div>
 
         <div data-bind="foreach:items">
@@ -91,7 +128,7 @@
 
         <hr />
 
-        <h3>Permissions</h3>
+        <h2>Permissions</h2>
         <!--<p class="section-control">
             <a class="btn" data-bind="click:managePermissions"><i class="icon-cog"></i> Manage permissions</a>
         </p>-->
@@ -102,7 +139,7 @@
         </div>
 
 
-        <h3>Logs</h3>
+        <h2>Logs</h2>
         <div data-bind="foreach:logs">
             <p class="folder-list-item" data-bind="text:message"></p>
         </div>

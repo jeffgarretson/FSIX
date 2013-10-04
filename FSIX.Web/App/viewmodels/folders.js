@@ -23,8 +23,7 @@
     //#region Private functions
 
     function activate() {
-        //logger.log("Activate()", null, "folders.js", true);
-        //vm.newFolderFormVisible(false);
+        vmFolders.newFolderFormVisible(false);
         getFolders();
     }
 
@@ -36,11 +35,11 @@
 
     function querySucceeded(data) {
         vmFolders.folders(data);
-        logger.log("Fetched items", data, "folders.js", false);
+        logger.success("Fetched folder data", data, "folders.js", false);
     }
 
     function queryFailed(error) {
-        logger.error("Failed to get items", error, "folders.js", false);
+        logger.error("Failed to get folder data", error, "folders.js", true);
     }
 
     function refreshView() {}
@@ -80,14 +79,14 @@
             .then(addSucceeded)
             .fail(addFailed);
         function addSucceeded() {
-            logger.log("Created folder " + vmFolders.newFolder.name(), null, null, true);
             vmFolders.newFolderFormVisible(false);
             vmFolders.folders.unshift(vmFolders.newFolder);
-            router.navigate(vmFolders.newFolder.url);
+            router.navigate(vmFolders.newFolder.url());
             vmFolders.newFolder = ko.observable();  // reset
+            logger.success("Created folder \"" + vmFolders.newFolder.name() + "\"", null, null, true);
         }
         function addFailed() {
-            logger.error("Folder add failed", null, null, true);
+            logger.error("Failed to add folder \"" + vmFolders.newFolder.name() + "\"", null, null, true);
             var index = vmFolders.folders.indexOf(vmFolders.newFolder);
             if (index > -1) {
                 setTimeout(function () { vmFolders.folders.splice(index, 1); }, 2000);

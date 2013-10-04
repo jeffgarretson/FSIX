@@ -18,7 +18,11 @@ define(
         addFile: addFile,
         addImage: addImage,
         managePermissions: managePermissions,
-        expireFolder: expireFolder
+        expireFolder: expireFolder,
+        editFolderDetails: editFolderDetails,
+        cancelEditFolderDetails: cancelEditFolderDetails,
+        updateFolderDetails: updateFolderDetails,
+        editFolderDetailsFormVisible: ko.observable(false)
     };
 
     return vmFolder;
@@ -36,7 +40,7 @@ define(
 
     function querySucceeded(data) {
         vmFolder.folders(data);
-        logger.log("Fetched items", data, "folder.js", false);
+        logger.success("Fetched items", data, "folder.js", false);
     }
 
     function queryFailed(error) {
@@ -89,16 +93,52 @@ define(
     }
 
     function expireFolder() {
-        var that = this;
+        var self = this;
         app.showMessage("Expire this folder and PERMANENTLY DELETE all contents?", "Expire folder", ["Yes", "No"])
             .then(function (response) {
                 if ("Yes" == response) {
-                    that.expire()
+                    self.expire()
                         .then(router.navigateBack())
-                        .then(logger.log('Folder "' + that.name() + '" expired', null, "folder.js", true));
+                        .then(logger.success('Folder "' + self.name() + '" expired', null, "folder.js", true));
                 }
             });
     };
+
+    function editFolderDetails() {
+        vmFolder.editFolderDetailsFormVisible(true);
+    }
+
+    function cancelEditFolderDetails() {
+        var self = this;
+        if (self.entityAspect.entityState.isModified()) {
+            app.showMessage("Cancel changes?", "Cancel", ["Yes", "No"])
+                .then(function (response) {
+                    if ("Yes" == response) { cancel(); }
+                });
+        } else {
+            cancel();
+        }
+
+        function cancel() {
+            self.entityAspect.rejectChanges();
+            vmFolder.editFolderDetailsFormVisible(false);
+        }
+    }
+
+    function updateFolderDetails() {
+        var self = this;
+        dataservice.saveEntity(self)
+            .then(success)
+            .fail(fail);
+        function success() {
+            vmFolder.editFolderDetailsFormVisible(false);
+            logger.success("Updated folder \"" + self.name() + "\"", null, null, true);
+        }
+        function fail() {
+            self.entityAspect.rejectChanges();
+            logger.error("Failed to update folder \"" + self.name() + "\"", null, null, true);
+        }
+    }
 
     //#endregion
 

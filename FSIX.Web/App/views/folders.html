@@ -5,23 +5,28 @@
             <div class="container">
                 <h2 class="page-title">Create New Folder</h2>
                 <form data-bind="submit: addFolder" role="form">
-                    <!--
-                    <div class="pull-right">
-                        <h4>Permissions</h4>
-                        <p>To do...</p>
-                    </div>
-                    -->
                     <div>
+                        <!-- New folder name -->
                         <div class="form-group">
                             <label for="input-folder-name">Name:</label>
-                            <input id="input-folder-name" class="form-control" autofocus="autofocus" data-bind="value: newFolder.name" placeholder="Folder name (required)" />
+                            <input id="input-folder-name" class="form-control" autofocus="autofocus"
+                                data-bind="value: newFolder.name" placeholder="Folder name (required)" />
                         </div>
+                        <!-- New folder description -->
                         <div class="form-group">
                             <label for="input-folder-desc">Description:</label>
-                            <textarea id="input-folder-desc" class="form-control" rows="5" data-bind="value: newFolder.description" placeholder="Folder description (optional)" />
+                            <textarea id="input-folder-desc" class="form-control" rows="5"
+                                data-bind="value: newFolder.description" placeholder="Folder description (optional)" />
                         </div>
-                        <a class="btn btn-primary" data-bind="click: createFolder"><i class="icon-cloud-upload"></i> Create Folder</a>
-                        <a class="btn btn-danger" data-bind="click: hideNewFolderForm"><i class="icon-trash"></i> Cancel</a>
+
+                        <!-- TODO: New folder permissions panel -->
+
+                        <!-- Create folder button -->
+                        <a class="btn btn-primary" data-bind="click: createFolder">
+                            <i class="icon-cloud-upload"></i> Create Folder</a>
+                        <!-- Cancel new folder button -->
+                        <a class="btn btn-danger" data-bind="click: hideNewFolderForm">
+                            <i class="icon-trash"></i> Cancel</a>
                     </div>
                 </form>
             </div>
@@ -30,19 +35,19 @@
 
     <div class="container">
 
-        <!-- <input class="pull-right" type="search" placeholder="Live search..." autofocus data-ng-model="searchText.name" /> -->
-        <h2 class="page-title" data-bind="text: displayName"></h2>
-        <p class="section-control" data-bind="if: !newFolderFormVisible()">
-            <a class="btn btn-default pull-right" data-bind="click: showNewFolderForm"><i class="icon-plus"></i> New folder</a>
-        </p>
-    <!--
-    </div>
+        <!-- TODO: Live search for folders 
+            <input class="pull-right" type="search" placeholder="Live search..." autofocus />
+            -->
 
-    <div class="container">
-    -->
+        <div class="pull-right page-title" data-bind="if: !newFolderFormVisible()">
+            <a class="btn btn-default pull-right" data-bind="click: showNewFolderForm">
+                <i class="icon-plus"></i> New folder</a>
+        </div>
+        <h1 class="page-title" data-bind="text: displayName"></h1>
+
         <div data-bind="foreach:folders">
             <article class="folder-list-item">
-                <h3><i class="icon-folder-open-alt"></i> <a data-bind="attr: { href: url }, text:name" title="Open folder"></a></h3>
+                <h2><i class="icon-folder-open-alt"></i> <a data-bind="attr: { href: url }, text:name" title="Open folder"></a></h2>
                 <p data-bind="text:description"></p>
                 <p class="section-control"><em>Expires <span data-bind="text:relativeExpirationDate" /></em></p>
             </article>

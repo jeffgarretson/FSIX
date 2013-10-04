@@ -98,6 +98,10 @@ define(['moment'], function (moment) {
             return dataservice.deleteItem(item);
         };
 
+        //Folder.prototype.updateFolderDetails = function (folder) {
+        //    return dataservice.saveEntity(folder);
+        //};
+
     }
 
     //#endregion

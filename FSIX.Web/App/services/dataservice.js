@@ -29,7 +29,7 @@
         item.initialize(dataservice);
         permission.initialize(dataservice);
 
-        logger.log("Data service ready", null, "dataservice.js", false);
+        logger.info("Data service ready", null, "dataservice.js", false);
 
         return dataservice;
 
@@ -57,7 +57,7 @@
 
         function getSucceeded(data) {
             var qType = data.XHR ? "remote" : "local";
-            logger.log(qType + " query succeeded");
+            logger.success(qType + " query succeeded");
             return data.results;
         }
 
@@ -116,7 +116,7 @@
             return manager.saveChanges().then(saveSucceeded).fail(saveFailed);
 
             function saveSucceeded() {
-                logger.log("saved " + description, null, "dataservice.js", false);
+                logger.success("saved " + description, null, "dataservice.js", false);
             }
 
             function saveFailed(error) {
@@ -126,11 +126,6 @@
 
                 masterEntity.errorMessage = msg;
                 logger.error("Failed to save folder", error, "dataservice.js", true);
-
-                logger.log(msg, 'error');
-
-                alert(msg);
-
                 // Let user see invalid value briefly before reverting
                 $timeout(function () { manager.rejectChanges(); }, 1000);
                 throw error; // so caller can see failure
@@ -139,7 +134,7 @@
         function describeSaveOperation(entity) {
             var statename = entity.entityAspect.entityState.name.toLowerCase();
             var typeName = entity.entityType.shortName;
-            var name = entity.name;
+            var name = entity.name();
             name = name ? (" '" + name + "'") : "";
             return statename + " " + typeName + name;
         }
@@ -169,8 +164,8 @@
                 .fail(saveFailed);
 
             function saveSucceeded(saveResult) {
-                logger.log("# of items saved = " + saveResult.entities.length);
-                logger.log(saveResult);
+                logger.success("# of items saved = " + saveResult.entities.length);
+                logger.info(saveResult);
             }
 
             function saveFailed(error) {
