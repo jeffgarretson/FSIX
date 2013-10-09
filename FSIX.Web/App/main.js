@@ -8,7 +8,13 @@
         'toastr': '../Scripts/toastr',
         'logger': 'services/logger',
         'dataservice': 'services/dataservice',
-        'moment': '../Scripts/moment'
+        'moment': '../Scripts/moment',
+        'plupload': '../Scripts/plupload/plupload.full'
+    },
+    shim: {
+        plupload: {
+            exports: 'plupload'
+        }
     }
 });
 

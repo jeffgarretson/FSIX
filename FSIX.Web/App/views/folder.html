@@ -54,10 +54,19 @@
                         <textarea id="input-item-note" class="form-control" autofocus rows="2" cols="80" wrap="soft" 
                             data-bind="value: $parent.newItem.note" placeholder="Enter a note" name="note" />
                     </div>
+                    <!--
                     <div class="form-group">
                         <label for="input-file">File:</label>
                         <input id="input-file" class="form-control" type="file" name="file" />
                     </div>
+                    -->
+
+                    <div id="upload-container">
+                        <p>Files:</p>
+                        <div id="upload-filelist">No runtime found.</div>
+                        <a id="upload-pickfiles" class="btn btn-default"><i class="icon-plus"></i> Add files...</a>
+                    </div>
+
                     <a class="btn btn-primary" data-bind="click: $parent.addItem" accesskey="S"><i class="icon-cloud-upload"></i> Submit</a>
                     <a class="btn btn-danger" data-bind="click: $parent.hideNewItemForm"><i class="icon-trash"></i> Cancel</a>
                 </form>

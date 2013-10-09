@@ -1,9 +1,10 @@
 ﻿// Folder ViewModel
 define(
-    ['plugins/router', 'durandal/app', 'dataservice', 'logger'],
-    function (router, app, dataservice, logger) {
+    ['plugins/router', 'durandal/app', 'dataservice', 'logger', 'plupload'],
+    function (router, app, dataservice, logger, plupload) {
         "use strict";
 
+        var uploader;
         var vmFolder = {
             displayName: "Folder Details",
             folders: ko.observableArray(),
@@ -51,10 +52,20 @@ define(
         function showNewItemForm() {
             vmFolder.newItem = dataservice.createItem();
             vmFolder.newItemFormVisible(true);
+            uploader = new plupload.Uploader({
+                runtimes: "html5,silverlight,flash,html4",
+                browse_button: "upload-pickfiles",
+                container: "upload-container",
+                _url: ko.computed(function () { return "/api/media/" + vmFolder.newItem.id; }),
+                silverlight_xap_url: "../Scripts/plupload/plupload.silverlight.xap",
+                flash_swf_url: "../Scripts/plupload/plupload.flash.swf"
+            });
+            uploader.init();
         }
 
         function hideNewItemForm() {
             // TODO: check whether newItem is modified and, if so, prompt user before canceling
+            uploader = null;
             vmFolder.newItemFormVisible(false);
             vmFolder.newItem.entityAspect.setDeleted();
             vmFolder.newItem = ko.observable();  // reset
@@ -71,8 +82,15 @@ define(
             vmFolder.newItem.type("Note");
             // Save changes
             dataservice.saveChanges()
+                .then(uploadFiles)
                 .then(success)
                 .fail(failure);
+            function uploadFiles() {
+                if (uploader.files.length) {
+                    uploader.settings.url = vmFolder.newItem.fileUploadUrl();
+                    uploader.start();
+                }
+            }
             function success() {
                 vmFolder.newItemFormVisible(false);
                 vmFolder.newItem = ko.observable();
