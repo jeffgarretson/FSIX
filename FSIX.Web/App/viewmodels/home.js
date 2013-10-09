@@ -1,7 +1,8 @@
 ﻿// Home ViewModel
 define(['dataservice', 'logger'], function (dataservice, logger) {
+    "use strict";
 
-    vm = {
+    var vmHome = {
         displayName: "Home",
         folders: ko.observableArray(),
         error: ko.observable(),
@@ -9,13 +10,11 @@ define(['dataservice', 'logger'], function (dataservice, logger) {
         getFolderDetails: getFolderDetails
     };
 
-    return vm;
+    return vmHome;
 
     function activate() {
         //getFolderDetails(parseInt(folderId));
     }
-
-    //#region Private functions
 
     function getFolderDetails(id) {
         dataservice.getFolderDetails(id)
@@ -25,14 +24,12 @@ define(['dataservice', 'logger'], function (dataservice, logger) {
     }
 
     function querySucceeded(data) {
-        vm.folders(data);
+        vmHome.folders(data);
         logger.log("Fetched items", data, "home.js", false);
     }
 
     function queryFailed(error) {
         logger.error("Failed to get items", error, "home.js", false);
     }
-
-    //#endregion
 
 });

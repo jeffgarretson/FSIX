@@ -1,6 +1,8 @@
 define(
     ['durandal/system', 'toastr'],
     function (system, toastr) {
+        "use strict";
+
         return {
             log: info,
             info: info,

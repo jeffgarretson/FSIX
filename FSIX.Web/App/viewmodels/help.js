@@ -1,11 +1,12 @@
 ﻿define(['dataservice', 'logger'], function (dataservice, logger) {
+    "use strict";
 
-    vm = {
+    var vmHelp = {
         displayName: "Help",
         activate: activate
     }
 
-    return vm;
+    return vmHelp;
 
     //#region Private functions
 

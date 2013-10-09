@@ -19,7 +19,7 @@
                         <!-- Folder name -->
                         <div class="form-group">
                             <label for="input-folder-name">Name:</label>
-                            <input id="input-folder-name" class="form-control" autofocus="autofocus"
+                            <input id="input-folder-name" class="form-control" autofocus
                                 data-bind="value: name" placeholder="Folder name (required)" />
                         </div>
                         <!-- Folder description -->
@@ -46,17 +46,20 @@
     <div data-bind="if: $parent.newItemFormVisible">
         <div class="jumbotron">
             <div class="container">
-                <h1 class="page-title">Add New Item in <span data-bind="text: name" /></h1>
-                <form id="add-item-form" data-bind="attr: { action: newItemUrl }" enctype="multipart/form-data" method="post">
-                    <p>
-                        Note:<br />
-                        <textarea data-bind="value: newItemNote" style="width:100%" rows="2" cols="80" wrap="soft" placeholder="Enter a note" name="note" /><br />
-                    </p>
-                    <p>
-                        File: <input type="file" name="file" /><br />
-                    </p>
-                    <a class="btn btn-primary" data-bind="click: $parent.postItem"><i class="icon-cloud-upload"></i> Submit</a>
-                    <a class="btn btn-danger" data-bind="click: $parent.cancelCreateItem"><i class="icon-trash"></i> Cancel</a>
+                <h1 class="page-title">Add New Item in &#8220;<span data-bind="text: name" />&#8221;</h1>
+                <!--data-bind="attr: { action: newItemUrl }"--> 
+                <form id="add-item-form" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label for="input-item-note">Note:</label>
+                        <textarea id="input-item-note" class="form-control" autofocus rows="2" cols="80" wrap="soft" 
+                            data-bind="value: $parent.newItem.note" placeholder="Enter a note" name="note" />
+                    </div>
+                    <div class="form-group">
+                        <label for="input-file">File:</label>
+                        <input id="input-file" class="form-control" type="file" name="file" />
+                    </div>
+                    <a class="btn btn-primary" data-bind="click: $parent.addItem" accesskey="S"><i class="icon-cloud-upload"></i> Submit</a>
+                    <a class="btn btn-danger" data-bind="click: $parent.hideNewItemForm"><i class="icon-trash"></i> Cancel</a>
                 </form>
             </div>
         </div>
@@ -72,7 +75,8 @@
                     title="PERMANENTLY DELETE all items in this folder, mark the folder as expired, and remove it from the list of active folders.">
                     <i class="icon-trash"></i> Expire</a>
             </div>
-            <h1 class="page-title"><i class="icon-folder-open-alt"></i> <span data-bind="text: name" /></h1>
+            <h1 class="page-title">
+                <a href="#folders">Folders</a> <i class="icon-double-angle-right"></i> <!--<i class="icon-folder-open-alt"></i> --><span data-bind="text: name" /></h1>
             <p class="section-control"><i class="icon-time"></i> <em>Expires <span data-bind="text: relativeExpirationDate" /></em></p>
             <p data-bind="text: description"></p>
             <hr />

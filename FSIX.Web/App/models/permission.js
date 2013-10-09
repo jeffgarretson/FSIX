@@ -1,11 +1,11 @@
-﻿define(function () {
+﻿// Permission Model
+define(function () {
+    "use strict";
 
     var model = {
         initialize: initialize
     };
     return model;
-
-    //#region Internal methods
 
     var dataservice;
 
@@ -28,7 +28,5 @@
             permission.accessDescription(perms.join(", "));
         }
     }
-
-    //#endregion
 
 });

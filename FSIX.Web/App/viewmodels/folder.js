@@ -2,144 +2,142 @@
 define(
     ['plugins/router', 'durandal/app', 'dataservice', 'logger'],
     function (router, app, dataservice, logger) {
+        "use strict";
 
-    vmFolder = {
-        displayName: "Folder Details",
-        folders: ko.observableArray(),
-        error: ko.observable(),
-        activate: activate,
-        getFolderDetails: getFolderDetails,
-        newItemType: ko.observable("Note"),
-        showNewItemForm: showNewItemForm,
-        newItemFormVisible: ko.observable(false),
-        postItem: postItem,
-        cancelCreateItem: cancelCreateItem,
-        addNote: addNote,
-        addFile: addFile,
-        addImage: addImage,
-        managePermissions: managePermissions,
-        expireFolder: expireFolder,
-        editFolderDetails: editFolderDetails,
-        cancelEditFolderDetails: cancelEditFolderDetails,
-        updateFolderDetails: updateFolderDetails,
-        editFolderDetailsFormVisible: ko.observable(false)
-    };
+        var vmFolder = {
+            displayName: "Folder Details",
+            folders: ko.observableArray(),
+            activate: activate,
+            getFolderDetails: getFolderDetails,
 
-    return vmFolder;
+            newItem: ko.observable(),
+            newItemFormVisible: ko.observable(false),
+            showNewItemForm: showNewItemForm,
+            hideNewItemForm: hideNewItemForm,
+            addItem: addItem,
 
-    function activate(folderId) {
-        getFolderDetails(parseInt(folderId));
-    }
+            managePermissions: managePermissions,
 
-    //#region Private functions
-    function getFolderDetails(id) {
-        dataservice.getFolderDetails(id)
-            .then(querySucceeded)
-            .fail(queryFailed);
-    }
+            expireFolder: expireFolder,
 
-    function querySucceeded(data) {
-        vmFolder.folders(data);
-        logger.success("Fetched items", data, "folder.js", false);
-    }
+            editFolderDetailsFormVisible: ko.observable(false),
+            editFolderDetails: editFolderDetails,
+            cancelEditFolderDetails: cancelEditFolderDetails,
+            updateFolderDetails: updateFolderDetails
+        };
 
-    function queryFailed(error) {
-        logger.error("Failed to get items", error, "folder.js", false);
-    }
+        return vmFolder;
 
-    function endEdit(entity) {
-        dataservice.saveEntity(entity).fin(refreshView);
-    }
-
-    function showNewItemForm() {
-        vmFolder.newItemFormVisible(true);
-    }
-
-    function postItem() { }
-
-    function cancelCreateItem() {
-        vmFolder.newItemFormVisible(false);
-    }
-
-    function addNote() {
-        var item = dataservice.createItem();
-        dataservice.saveEntity(item)
-            .then(addSucceeded)
-            .fail(addFailed);
-
-        function addSucceeded() {
-            showAddedItem(item);
+        function activate(folderId) {
+            getFolderDetails(parseInt(folderId));
         }
 
-        function addFailed(error) {
-            failed({ message: "Save of new item failed" });
+        function getFolderDetails(id) {
+            dataservice.getFolderDetails(id)
+                .then(querySucceeded)
+                .fail(queryFailed);
+
+            function querySucceeded(data) {
+                vmFolder.folders(data);
+                logger.success("Fetched items", data, "folder.js", false);
+            }
+
+            function queryFailed(error) {
+                logger.error("Failed to get items", error, "folder.js", false);
+            }
+
         }
-    }
 
-    function addFile() {
-        alert("User wants to add a new FILE. Double-Ha!!!");
-    }
+        function showNewItemForm() {
+            vmFolder.newItem = dataservice.createItem();
+            vmFolder.newItemFormVisible(true);
+        }
 
-    function addImage() {
-        alert("Add a new IMAGE? Just try it!");
-    }
+        function hideNewItemForm() {
+            // TODO: check whether newItem is modified and, if so, prompt user before canceling
+            vmFolder.newItemFormVisible(false);
+            vmFolder.newItem.entityAspect.setDeleted();
+            vmFolder.newItem = ko.observable();  // reset
+        }
 
-    function managePermissions() {
-        alert("You wanna manage PERMISSIONS? Man, you craaaaazy!");
-    }
-
-    function showAddedItem(item) {
-        vmFolder.folders.items.unshift(item);
-    }
-
-    function expireFolder() {
-        var self = this;
-        app.showMessage("Expire this folder and PERMANENTLY DELETE all contents?", "Expire folder", ["Yes", "No"])
-            .then(function (response) {
-                if ("Yes" == response) {
-                    self.expire()
-                        .then(router.navigateBack())
-                        .then(logger.success('Folder "' + self.name() + '" expired', null, "folder.js", true));
+        function addItem() {
+            var self = this;
+            // Connect new item to this folder
+            this.items.push(vmFolder.newItem);
+            // Set properties
+            vmFolder.newItem.createdTime(new Date());
+            vmFolder.newItem.modifiedTime(new Date());
+            vmFolder.newItem.createdBy(dataservice.currentUser());
+            vmFolder.newItem.type("Note");
+            // Save changes
+            dataservice.saveChanges()
+                .then(success)
+                .fail(failure);
+            function success() {
+                vmFolder.newItemFormVisible(false);
+                vmFolder.newItem = ko.observable();
+                logger.success("New item saved successfully", null, null, true);
+            }
+            function failure() {
+                logger.error("Failed to save new item", null, null, true);
+                // Show the failed item for a bit, then remove it
+                var index = self.items.indexOf(vmFolder.newItem);
+                if (index > -1) {
+                    setTimeout(function () { self.items.splice(index, 1); }, 2000);
                 }
-            });
-    };
+            }
+        }
 
-    function editFolderDetails() {
-        vmFolder.editFolderDetailsFormVisible(true);
-    }
+        function managePermissions() {
+            alert("You wanna manage PERMISSIONS? Man, you craaaaazy!");
+        }
 
-    function cancelEditFolderDetails() {
-        var self = this;
-        if (self.entityAspect.entityState.isModified()) {
-            app.showMessage("Cancel changes?", "Cancel", ["Yes", "No"])
+        function expireFolder() {
+            var self = this;
+            app.showMessage("Expire this folder and PERMANENTLY DELETE all contents?", "Expire folder", ["Yes", "No"])
                 .then(function (response) {
-                    if ("Yes" == response) { cancel(); }
+                    if ("Yes" == response) {
+                        self.expire()
+                            .then(router.navigateBack())
+                            .then(logger.success('Folder "' + self.name() + '" expired', null, "folder.js", true));
+                    }
                 });
-        } else {
-            cancel();
+        };
+
+        function editFolderDetails() {
+            vmFolder.editFolderDetailsFormVisible(true);
         }
 
-        function cancel() {
-            self.entityAspect.rejectChanges();
-            vmFolder.editFolderDetailsFormVisible(false);
-        }
-    }
+        function cancelEditFolderDetails() {
+            var self = this;
+            if (self.entityAspect.entityState.isModified()) {
+                app.showMessage("Cancel changes?", "Cancel", ["Yes", "No"])
+                    .then(function (response) {
+                        if ("Yes" == response) { cancel(); }
+                    });
+            } else {
+                cancel();
+            }
 
-    function updateFolderDetails() {
-        var self = this;
-        dataservice.saveEntity(self)
-            .then(success)
-            .fail(fail);
-        function success() {
-            vmFolder.editFolderDetailsFormVisible(false);
-            logger.success("Updated folder \"" + self.name() + "\"", null, null, true);
+            function cancel() {
+                self.entityAspect.rejectChanges();
+                vmFolder.editFolderDetailsFormVisible(false);
+            }
         }
-        function fail() {
-            self.entityAspect.rejectChanges();
-            logger.error("Failed to update folder \"" + self.name() + "\"", null, null, true);
+
+        function updateFolderDetails() {
+            var self = this;
+            dataservice.saveEntity(self)
+                .then(success)
+                .fail(fail);
+            function success() {
+                vmFolder.editFolderDetailsFormVisible(false);
+                logger.success("Updated folder \"" + self.name() + "\"", null, null, true);
+            }
+            function fail() {
+                self.entityAspect.rejectChanges();
+                logger.error("Failed to update folder \"" + self.name() + "\"", null, null, true);
+            }
         }
-    }
 
-    //#endregion
-
-});
+    });

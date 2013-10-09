@@ -22,24 +22,25 @@
             deleteItem: deleteItem,
 
             saveEntity: saveEntity,
-            saveChanges: saveChanges
+            saveChanges: saveChanges,
+
+            currentUser: ko.observable()
         };
 
         folder.initialize(dataservice);
         item.initialize(dataservice);
         permission.initialize(dataservice);
 
+        cacheMyUserObject();
+
         logger.info("Data service ready", null, "dataservice.js", false);
 
         return dataservice;
 
-        /*** implementation details ***/
-
-        //#region main application operations
         function getFolders(forceRefresh) {
             var query = breeze.EntityQuery
                     .from("folders")
-                    .where("expirationDate", ">", new Date())
+                    .where("expirationDate", ">", new Date())  // TODO: enforce this server-side
                     .orderBy("expirationDate DESC, name");
             return manager.executeQuery(query)
                 .then(getSucceeded);
@@ -155,9 +156,6 @@
             }
         }
 
-
-
-
         function saveChanges() {
             return manager.saveChanges()
                 .then(saveSucceeded)
@@ -205,7 +203,15 @@
         }
 
 
-
+        function cacheMyUserObject() {
+            var query = breeze.EntityQuery
+                .from("whoami");
+            return manager.executeQuery(query)
+                .then(success);
+            function success(data) {
+                dataservice.currentUser(data.results[0]);
+            }
+        }
 
         function configureBreeze() {
             // configure to use camelCase
@@ -223,7 +229,5 @@
             //    };
             //}
         }
-
-        //#endregion
 
     });
