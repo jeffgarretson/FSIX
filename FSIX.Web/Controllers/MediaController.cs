@@ -26,18 +26,23 @@ namespace FSIX.Web.Controllers
         }
 
         // GET api/media/1
-        public HttpResponseMessage Get(int id)
+        public HttpResponseMessage GetMedia(int id)
         {
             int mediaId = id;
-            var data = from f in _repository.Context.Media
-                       where f.Id == mediaId
-                       select f;
-            Media media = (Media)data.Single();
-            // This will be a file stream, not a MemoryStream
-            //MemoryStream ms = new MemoryStream(item.Content);
+            string username = User.Identity.Name.Split('\\')[1];
+
+            // TODO: SECURITY CHECK!!!
+            Media media = _repository.Context.Media.Include("MediaStorage").Where(m => m.Id == mediaId).Single();
+
+            string uploadDir = HttpContext.Current.Server.MapPath("~/App_Data");
+            String localFileName = media.MediaStorage.LocalFileName;
+            String path = uploadDir + "\\" + localFileName;
+            FileStream fs = new FileStream(path, FileMode.Open);
+
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            //response.Content = new StreamContent(ms);
-            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(media.MimeType);
+            response.Content = new StreamContent(fs);
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(media.MimeType);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline");
             response.Content.Headers.ContentDisposition.FileName = media.FileName;
             response.Content.Headers.ContentDisposition.CreationDate = media.CreatedTime;
             response.Content.Headers.ContentDisposition.ModificationDate = media.ModifiedTime;
@@ -47,7 +52,7 @@ namespace FSIX.Web.Controllers
         // POST api/media/5
         [HttpPost]
         //public async Task<IEnumerable<Item>> Post(int id)
-        public async Task Post(int id)
+        public async Task PostMedia(int id)
         {
             int itemId = id;
 
