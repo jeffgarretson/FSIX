@@ -18,14 +18,9 @@ define(['moment'], function (moment) {
 
     function itemInitializer(item) {
         item.errorMessage = ko.observable("");
-        //item.relativeCreatedDate = ko.observable(new moment(item.createdTime()).fromNow());
         item.relativeCreatedDate = ko.computed(function () {
             return new moment(item.createdTime()).fromNow();
         });
-        //item.url = ko.observable("/media.aspx?id=" + item.id());
-        //item.url = ko.computed(function () {
-        //    return "/media.aspx?id=" + item.id();
-        //});
         item.fileUploadUrl = ko.computed(function () {
             return "/api/media/" + item.id();
         });

@@ -1,6 +1,6 @@
 ﻿define(
-    ['models/folder', 'models/item', 'models/permission', 'logger'],
-    function (folder, item, permission, logger) {
+    ['models/folder', 'models/item', 'models/permission', 'models/media', 'logger'],
+    function (folder, item, permission, media, logger) {
         "use strict";
 
         configureBreeze();
@@ -30,6 +30,7 @@
         folder.initialize(dataservice);
         item.initialize(dataservice);
         permission.initialize(dataservice);
+        media.initialize(dataservice);
 
         cacheMyUserObject();
 

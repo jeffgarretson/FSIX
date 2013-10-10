@@ -104,38 +104,28 @@
         </div>
 
         <div data-bind="foreach:items">
-            <div class="folder-list-item">
-                <!-- ko if: ("Note" == type()) -->
-                <p><i class="icon-comment-alt icon-2x pull-left"></i> <span data-bind="text:note" /></p>
-                <p class="section-control">
-                    <em>
-                        Created <span data-bind="text:relativeCreatedDate" />
-                        by <span data-bind="text:createdBy().displayName" />
-                    </em>
-                </p>
-                <!-- /ko -->
+            <div class="media">
 
-                <!-- ko if: ("File" == type()) -->
-                <p><i class="icon-file-alt icon-2x pull-left"></i> <a data-bind="attr: {href: url}, text: id" /></p>
-                <p><span data-bind="text: note" /></p>
-                <p class="section-control">
-                    <em>
-                        Created <span data-bind="text: relativeCreatedDate" />
-                        by <span data-bind="text: createdBy().displayName" />
-                    </em>
-                </p>
+                <!-- ko if: note -->
+                    <i class="media-object icon-comment-alt icon-2x pull-left"></i>
                 <!-- /ko -->
+                <!-- ko if: !note() -->
+                    <i class="media-object icon-copy icon-2x pull-left"></i>
+                <!-- /ko -->
+                <div class="media-body">
+                    <h3 class="media-heading" data-bind="text: note, if: note" />
+                    <p class="section-control">
+                        <em>
+                            Added <span data-bind="text: relativeCreatedDate" />
+                            by <span data-bind="text: createdBy().displayName" />
+                        </em>
+                    </p>
+                    <div data-bind="foreach: media">
+                        <!-- TODO: use "icon-picture" for image media (or better yet, a thumbnail) -->
+                        <h4><i class="icon-file-alt icon-large"></i> <a href="#" data-bind="text: fileName"></a></h4>
+                    </div>
+                </div>
 
-                <!-- ko if: ("Image" == type()) -->
-                <p><i class="icon-picture icon-2x pull-left"></i> <!--<img class="item-image" data-bind="attr: { src: url }" /> --></p>
-                <p><span data-bind="text: note" /></p>
-                <p class="section-control">
-                    <em>
-                        Created <span data-bind="text: relativeCreatedDate" />
-                        by <span data-bind="text: createdBy().displayName" />
-                    </em>
-                </p>
-                <!-- /ko -->
             </div>
         </div>
 

@@ -68,7 +68,7 @@
                 .fail(addFailed);
             function addSucceeded() {
                 vmFolders.newFolderFormVisible(false);
-                vmFolders.folders.unshift(vmFolders.newFolder);
+                //vmFolders.folders.unshift(vmFolders.newFolder);
                 router.navigate(vmFolders.newFolder.url());
                 vmFolders.newFolder = ko.observable();  // reset
                 logger.success("Created folder \"" + vmFolders.newFolder.name() + "\"", null, null, true);

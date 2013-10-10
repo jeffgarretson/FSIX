@@ -218,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\main.js" />
+    <Content Include="App\models\media.js" />
     <Content Include="App\models\item.js" />
     <Content Include="App\models\permission.js" />
     <Content Include="App\models\folder.js" />

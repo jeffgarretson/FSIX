@@ -73,13 +73,20 @@ define(
 
         function addItem() {
             var self = this;
-            // Connect new item to this folder
-            this.items.push(vmFolder.newItem);
+
+            // Cancel save and notify user if Note and Files are both empty
+            if ((null == vmFolder.newItem.note()) && (!uploader.files.length)) {
+                logger.warning("You must either enter a note or add a file", null, null, true);
+                return;
+            }
+
             // Set properties
             vmFolder.newItem.createdTime(new Date());
             vmFolder.newItem.modifiedTime(new Date());
             vmFolder.newItem.createdBy(dataservice.currentUser());
             vmFolder.newItem.type("Note");
+            // Connect new item to this folder
+            this.items.push(vmFolder.newItem);
             // Save changes
             dataservice.saveChanges()
                 .then(uploadFiles)
