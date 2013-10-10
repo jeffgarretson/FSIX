@@ -51,7 +51,7 @@
                     .from("folders")
                     .where("id", "==", id)
                     .orderBy("expirationDate DESC, name")
-                    .expand("permissions, permissions.user, items, items.createdby, logs");
+                    .expand("permissions, permissions.user, items, items.createdby, items.media, logs");
             return manager.executeQuery(query)
                 .then(getSucceeded);
         }

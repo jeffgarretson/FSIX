@@ -235,6 +235,19 @@ namespace FSIX.Models
             }
         }
 
+        public bool VerifyItemCreator(int itemId)
+        {
+            Item item = ValidationContext.Items.Find(itemId);
+            if (null == item)
+            {
+                return false;
+            }
+            else
+            {
+                return item.CreatedByUsername == Username;
+            }
+        }
+
         #region Media Upload
 
         public async Task AddMediaAsync(HttpContent media)
