@@ -122,7 +122,7 @@
                     </p>
                     <div data-bind="foreach: media">
                         <!-- TODO: use "icon-picture" for image media (or better yet, a thumbnail) -->
-                        <h4><i class="icon-file-alt icon-large"></i> <a href="#" data-bind="text: fileName"></a></h4>
+                        <h4><i class="icon-file-alt icon-large"></i> <a data-bind="attr: {href: url}, text: fileName"></a></h4>
                     </div>
                 </div>
 
